@@ -18,6 +18,10 @@ public class World {
     public static final float RAY_CASTING_STEP = 1; //TODO
     public static final int GRID_MAX = 20;
     public static final int WORLD_SIDE_LENGTH = GRID_MAX;
+
+    static final double FOURTH_OF_PI = Math.PI / 4;
+    static final double THREE_FOURTH_OF_PI = FOURTH_OF_PI * 3;
+
     private final VoxelModelFactory voxelModelFactory;
 
     private Voxel cubes[][][];
@@ -57,9 +61,31 @@ public class World {
         {
             //TODO cope with clicking on void
         }else{
+
             int newXi = pointedVoxel.xi;
-            int newYi = pointedVoxel.yi + 1;
+            int newYi = pointedVoxel.yi;
             int newZi = pointedVoxel.zi;
+
+            if(pointedVoxel.yi * Voxel.CUBE_SIZE < player.getY() - 1){ //LOOKING AT TOP FACE
+                newYi++;
+            }else{ //LOOKING AT A SIDE
+
+                double radZiXi = Math.atan2( //find out horizontal angle between player and pointed voxel
+                        pointedVoxel.zi * Voxel.CUBE_SIZE - player.getZ(),
+                        pointedVoxel.xi * Voxel.CUBE_SIZE - player.getX()
+                ) ;
+
+                if(radZiXi > -FOURTH_OF_PI && radZiXi < FOURTH_OF_PI){
+                    newXi--;
+                }else if( radZiXi > FOURTH_OF_PI && radZiXi < THREE_FOURTH_OF_PI){
+                    newZi--;
+                }else if( radZiXi < -FOURTH_OF_PI && radZiXi > -THREE_FOURTH_OF_PI){
+                    newZi++;
+                }else{
+                    newXi++;
+                }
+            }
+
             Voxel aboveVoxel = getCube(newXi, newYi, newZi);
 
             if(aboveVoxel != null){
