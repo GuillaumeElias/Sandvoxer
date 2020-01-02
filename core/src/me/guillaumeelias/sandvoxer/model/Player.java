@@ -11,13 +11,14 @@ public class Player {
     public static final int PLAYER_HEIGHT = 2;
     public static final int PLAYER_WIDTH = 7;
     public static final int PLAYER_DEPTH = 7;
-
+    public static final float NEW_BLOCK_REACH = 40f;
 
     private final float MOVE_VELOCITY = 50;
     private final float GRAVITY_VELOCITY = 0.8f;
     private final float FALL_MAX_VELOCITY = 3f;
     private final float JUMP_VELOCITY = 1.0f;
     private final float ROT_SPEED = 0.2f;
+
 
     Vector3 position;
     boolean inAir;

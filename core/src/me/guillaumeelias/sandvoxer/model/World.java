@@ -57,14 +57,25 @@ public class World {
     public void onClickBlock(Vector3 rayFrom, Vector3 rayTo){
         Voxel pointedVoxel = findCubeAtRay(rayFrom, rayTo);
 
+        int newXi;
+        int newYi;
+        int newZi;
+
         if(pointedVoxel == null)
         {
-            //TODO cope with clicking on void
+            rayTo.nor();
+            rayTo.scl(Player.NEW_BLOCK_REACH);
+            rayFrom.add(rayTo);
+
+            newXi = Math.round(rayFrom.x / Voxel.CUBE_SIZE );
+            newYi = Math.round(rayFrom.y / Voxel.CUBE_SIZE );
+            newZi = Math.round(rayFrom.z / Voxel.CUBE_SIZE );
+
         }else{
 
-            int newXi = pointedVoxel.xi;
-            int newYi = pointedVoxel.yi;
-            int newZi = pointedVoxel.zi;
+            newXi = pointedVoxel.xi;
+            newYi = pointedVoxel.yi;
+            newZi = pointedVoxel.zi;
 
             if(pointedVoxel.yi * Voxel.CUBE_SIZE < player.getY() - 1){ //LOOKING AT TOP FACE
                 newYi++;
@@ -85,15 +96,23 @@ public class World {
                     newXi++;
                 }
             }
-
-            Voxel aboveVoxel = getCube(newXi, newYi, newZi);
-
-            if(aboveVoxel != null){
-                //TODO cope with above block already exists
-            }else{
-                addBlock(newXi, newYi, newZi);
-            }
         }
+
+        if( newXi < 0 || newXi >= GRID_MAX ||
+                newYi < 0 || newYi >= GRID_MAX ||
+                newZi < 0 || newZi >= GRID_MAX  ){
+            Gdx.app.log("onClickBlock", "Can't add block outside world.");
+            return;
+        }
+
+        Voxel newVoxel = getCube(newXi, newYi, newZi);
+
+        if(newVoxel != null){
+            //TODO cope with above block already exists
+            return;
+        }
+
+        addBlock(newXi, newYi, newZi);
     }
 
     public void onRightClickBlock(Vector3 rayFrom, Vector3 rayTo) {
@@ -136,24 +155,20 @@ public class World {
 
 
     public Voxel findCubeAtRay(Vector3 rayFrom, Vector3 rayTo){
-        Vector3 tmp = new Vector3(rayFrom)/*.scl(0.4f)*/;
-        Vector3 step = new Vector3(rayTo)/*.scl(0.4f)*/;
+        Vector3 tmp = new Vector3(rayFrom);
+        Vector3 step = new Vector3(rayTo);
 
         for(int i = 0; i < DISTANCE_MAX; i += RAY_CASTING_STEP){
-            //Gdx.app.log("tmp", tmp.x +" "+ tmp.y +" "+ tmp.z);
 
             Voxel voxel = getVoxel(tmp.x, tmp.y, tmp.z);
             if(voxel != null)
             {
                 Gdx.app.log("onClickBlock","hit !");
-
-                //sandvoxer.createDebugVector(rayFrom, tmp);
                 return voxel;
             }
             tmp.add(step);
         }
         return null;
-        //sandvoxer.createDebugVector(rayFrom, tmp);
     }
 
     public Voxel getCube(int xi, int yi, int zi) {
