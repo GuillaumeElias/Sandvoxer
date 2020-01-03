@@ -83,14 +83,13 @@ public class World {
             newYi = pointedVoxel.yi;
             newZi = pointedVoxel.zi;
 
+            int aXi = Math.round(hitVoxel.incisionPoint.x / Voxel.CUBE_SIZE );
+            int aYi = Math.round(hitVoxel.incisionPoint.y / Voxel.CUBE_SIZE );
+            int aZi = Math.round(hitVoxel.incisionPoint.z / Voxel.CUBE_SIZE );
 
-            if(pointedVoxel.boundingBox.getCenterY() < player.getY() - 1){ //LOOKING AT TOP FACE
+            if(aYi > pointedVoxel.yi){ //CLICKED ON TOP FACE
                 newYi++;
-            }else{ //LOOKING AT A SIDE    //TODO handle adding from below
-
-                int aXi = Math.round(hitVoxel.incisionPoint.x / Voxel.CUBE_SIZE );
-                //int aYi = Math.round(hitVoxel.incisionPoint.y / Voxel.CUBE_SIZE );
-                int aZi = Math.round(hitVoxel.incisionPoint.z / Voxel.CUBE_SIZE );
+            }else{ //CLICKED ON AT A SIDE    //TODO handle adding from below
 
                 if(aXi < pointedVoxel.xi){
                     newXi--;
