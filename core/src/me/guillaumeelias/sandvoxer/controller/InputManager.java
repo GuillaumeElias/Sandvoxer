@@ -61,16 +61,13 @@ public class InputManager extends InputAdapter {
         rayTo.set(camera.direction);
         rayTo.nor();
 
-        Gdx.app.log("touchDown", "rayTo.x"+rayTo.x +" z=" + rayTo.z);
-
         if(button == 1){
             world.onRightClickBlock(rayFrom, rayTo);
         }else {
             world.onClickBlock(rayFrom, rayTo);
         }
 
-
-        return super.touchDown(screenX, screenY, pointer, button);
+        return true;
     }
 
     @Override
@@ -78,7 +75,7 @@ public class InputManager extends InputAdapter {
 
         player.mouseMoved(screenX, screenY);
 
-        refreshCamera();
+        //refreshCamera();
 
         return true;
     }

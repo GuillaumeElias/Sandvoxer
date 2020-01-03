@@ -6,7 +6,6 @@ import me.guillaumeelias.sandvoxer.Sandvoxer;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		new LwjglApplication(new Sandvoxer(), config);
+		new LwjglApplication(new Sandvoxer(),  "Sandvoxer", 1064, 800);
 	}
 }

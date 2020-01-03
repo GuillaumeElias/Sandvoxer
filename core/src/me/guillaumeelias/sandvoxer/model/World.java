@@ -16,8 +16,11 @@ public class World {
 
     public static final int DISTANCE_MAX = 50;
     public static final float RAY_CASTING_STEP = 1; //TODO
-    public static final int GRID_MAX = 20;
-    public static final int WORLD_SIDE_LENGTH = GRID_MAX;
+
+    public static final int GRID_SIZE = 200;
+    public static final int WORLD_SIDE_LENGTH = GRID_SIZE;
+
+    public static final int PLATFORM_SIZE = 20;
 
     static final double FOURTH_OF_PI = Math.PI / 4;
     static final double THREE_FOURTH_OF_PI = FOURTH_OF_PI * 3;
@@ -36,20 +39,22 @@ public class World {
         this.modelInstances = new ArrayList<>(WORLD_SIDE_LENGTH*WORLD_SIDE_LENGTH);
 
         cubes = new Voxel[WORLD_SIDE_LENGTH][WORLD_SIDE_LENGTH][WORLD_SIDE_LENGTH];
-        for (int xi = 0; xi < World.GRID_MAX; xi += 1) {
-            for (int yi = 0; yi < World.GRID_MAX; yi += 1) {
-                if(yi == 0)
-                {
-                    for (int zi = 0; zi < World.GRID_MAX; zi += 1) {
-                        Model model = voxelModelFactory.buildModelType(VoxelType.GRASS);
 
-                        ModelInstance modelInstance = new ModelInstance(model);
-                        modelInstance.transform.translate(xi * Voxel.CUBE_SIZE,yi * Voxel.CUBE_SIZE,zi * Voxel.CUBE_SIZE);
+        //INITIALIZE PLATFORMS
+        initializePlatform(0, 90, 90, VoxelType.GRASS);
+        initializePlatform(20, 60, 120, VoxelType.WOOD);
+    }
 
-                        cubes[xi][yi][zi] = new Voxel(xi, yi, zi, modelInstance, VoxelType.GRASS);
-                        modelInstances.add(modelInstance);
-                    }
-                }
+    private void initializePlatform(int yi, int posX, int posZ, VoxelType voxelType){
+        for (int xi = posX; xi < posX + PLATFORM_SIZE; xi += 1) {
+            for (int zi = posZ; zi < posZ + PLATFORM_SIZE; zi += 1) {
+                Model model = voxelModelFactory.buildModelType(voxelType);
+
+                ModelInstance modelInstance = new ModelInstance(model);
+                modelInstance.transform.translate(xi * Voxel.CUBE_SIZE, yi * Voxel.CUBE_SIZE, zi * Voxel.CUBE_SIZE);
+
+                cubes[xi][yi][zi] = new Voxel(xi, yi, zi, modelInstance, voxelType);
+                modelInstances.add(modelInstance);
             }
         }
     }
@@ -98,9 +103,9 @@ public class World {
             }
         }
 
-        if( newXi < 0 || newXi >= GRID_MAX ||
-                newYi < 0 || newYi >= GRID_MAX ||
-                newZi < 0 || newZi >= GRID_MAX  ){
+        if( newXi < 0 || newXi >= GRID_SIZE ||
+                newYi < 0 || newYi >= GRID_SIZE ||
+                newZi < 0 || newZi >= GRID_SIZE  ){
             Gdx.app.log("onClickBlock", "Can't add block outside world.");
             return;
         }
@@ -120,9 +125,9 @@ public class World {
 
         if(pointedVoxel != null)
         {
-            if(pointedVoxel.type == VoxelType.RANDOM_COLOR){
+            /*if(pointedVoxel.type == VoxelType.RANDOM_COLOR){
                 pointedVoxel.getModelInstance().model.dispose();
-            }
+            }*/
             modelInstances.remove(pointedVoxel.getModelInstance());
             cubes[pointedVoxel.xi][pointedVoxel.yi][pointedVoxel.zi] = null;
         }
@@ -178,9 +183,9 @@ public class World {
 
     public Voxel getCubeOrNull(int xi, int yi, int zi) {
 
-        if( xi < 0 || xi >= GRID_MAX ||
-                yi < 0 || yi >= GRID_MAX ||
-                zi < 0 || zi >= GRID_MAX  ){
+        if( xi < 0 || xi >= GRID_SIZE ||
+                yi < 0 || yi >= GRID_SIZE ||
+                zi < 0 || zi >= GRID_SIZE  ){
             return null;
         }
 
@@ -235,9 +240,9 @@ public class World {
         int yi = Math.round(y / Voxel.CUBE_SIZE );
         int zi = Math.round(z / Voxel.CUBE_SIZE );
 
-        if( xi < 0 || xi >= GRID_MAX ||
-                yi < 0 || yi >= GRID_MAX ||
-                zi < 0 || zi >= GRID_MAX  ){
+        if( xi < 0 || xi >= GRID_SIZE ||
+                yi < 0 || yi >= GRID_SIZE ||
+                zi < 0 || zi >= GRID_SIZE  ){
             return null;
         }
 

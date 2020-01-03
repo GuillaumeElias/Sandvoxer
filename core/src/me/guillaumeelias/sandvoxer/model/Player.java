@@ -16,7 +16,7 @@ public class Player {
     private final float MOVE_VELOCITY = 50;
     private final float GRAVITY_VELOCITY = 0.8f;
     private final float FALL_MAX_VELOCITY = 3f;
-    private final float JUMP_VELOCITY = 1.0f;
+    private final float JUMP_VELOCITY = 1.2f;
     private final float ROT_SPEED = 0.2f;
 
 
@@ -36,7 +36,7 @@ public class Player {
     private int _mouseY;
 
     public Player(World world, Camera camera) {
-        this.position = new Vector3(3, PLAYER_HEIGHT + 20, 3);
+        this.position = new Vector3(100 * Voxel.CUBE_SIZE, PLAYER_HEIGHT + 20, 100 * Voxel.CUBE_SIZE);
 
         this.world = world;
 
