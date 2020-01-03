@@ -8,8 +8,6 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
-import com.badlogic.gdx.math.MathUtils;
-import me.guillaumeelias.sandvoxer.util.Utils;
 import me.guillaumeelias.sandvoxer.model.Voxel;
 
 import java.util.HashMap;
@@ -19,6 +17,8 @@ public class VoxelModelFactory {
 
     private static Texture GRASS_TEXTURE = new Texture("grass.png");
     private static Texture WOOD_TEXTURE = new Texture("wood.png");
+    private static Texture SAND_TEXTURE = new Texture("sand.png");
+
 
     static { //TODO create
         GRASS_TEXTURE.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
@@ -26,11 +26,14 @@ public class VoxelModelFactory {
 
         WOOD_TEXTURE.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
         WOOD_TEXTURE.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+
+        SAND_TEXTURE.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+        SAND_TEXTURE.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
     }
 
     private static Material GRASS_MATERIAL = new Material(TextureAttribute.createDiffuse(GRASS_TEXTURE));
     private static Material WOOD_MATERIAL = new Material(TextureAttribute.createDiffuse(WOOD_TEXTURE));
-
+    private static Material SAND_MATERIAL = new Material(TextureAttribute.createDiffuse(SAND_TEXTURE));
 
     private Map<VoxelType, Model> existingTypes;
 
@@ -60,6 +63,13 @@ public class VoxelModelFactory {
                         WOOD_MATERIAL, VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
                 existingTypes.put(VoxelType.WOOD, model);
                 break;
+
+            case SAND:
+                model = modelBuilder.createBox(Voxel.CUBE_SIZE, Voxel.CUBE_SIZE, Voxel.CUBE_SIZE,
+                        SAND_MATERIAL, VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
+                existingTypes.put(VoxelType.SAND, model);
+                break;
+
             case RANDOM_COLOR:
 
                 Material randomColorMaterial = new Material(ColorAttribute.createDiffuse(Color.RED));

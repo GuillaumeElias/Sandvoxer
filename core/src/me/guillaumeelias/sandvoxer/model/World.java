@@ -149,12 +149,12 @@ public class World {
         }
 
         //BUILD BOX
-        Model model = voxelModelFactory.buildModelType(VoxelType.RANDOM_COLOR);
+        Model model = voxelModelFactory.buildModelType(VoxelType.SAND);
 
         ModelInstance modelInstance = new ModelInstance(model);
         modelInstance.transform.translate(newXi * Voxel.CUBE_SIZE,newYi * Voxel.CUBE_SIZE,newZi * Voxel.CUBE_SIZE);
 
-        cubes[newXi][newYi][newZi] = new Voxel(newXi, newYi, newZi, modelInstance, VoxelType.RANDOM_COLOR);
+        cubes[newXi][newYi][newZi] = new Voxel(newXi, newYi, newZi, modelInstance, VoxelType.SAND);
         modelInstances.add(modelInstance);
     }
 
@@ -203,13 +203,13 @@ public class World {
 
     public boolean checkBoxCollision(float x, float y, float z, int width, int height, int depth){
 
-        int xiMin = (int) Math.floor(x / Voxel.CUBE_SIZE );
-        int yiMin = (int) Math.floor(y / Voxel.CUBE_SIZE );
-        int ziMin = (int) Math.floor(z / Voxel.CUBE_SIZE );
+        int xiMin = Math.round(x / Voxel.CUBE_SIZE ) - 1;
+        int yiMin = Math.round(y / Voxel.CUBE_SIZE ) - 1;
+        int ziMin = Math.round(z / Voxel.CUBE_SIZE ) - 1;
 
-        int xiMax = (int) Math.ceil(x + width / Voxel.CUBE_SIZE );
-        int yiMax = (int) Math.ceil(y + height / Voxel.CUBE_SIZE );
-        int ziMax = (int) Math.ceil(z + depth / Voxel.CUBE_SIZE );
+        int xiMax = Math.round((x + width) / Voxel.CUBE_SIZE ) + 1; //TODO actually if we're only using this with the player, we know how many tiles to check
+        int yiMax = Math.round((y + height)/ Voxel.CUBE_SIZE ) + 1;
+        int ziMax = Math.round((z + depth) / Voxel.CUBE_SIZE ) + 1;
 
         BoundingBox playerBox = buildBoundingBox(x, y, z, width, height, depth);
 
@@ -224,6 +224,7 @@ public class World {
                         return true;
                     }
                 }
+
             }
         }
 
