@@ -75,18 +75,12 @@ public class InputManager extends InputAdapter {
 
         player.mouseMoved(screenX, screenY);
 
-        //refreshCamera();
-
         return true;
     }
 
-    public void refreshCamera(){
-        camera.position.set(player.getPosition());
-
-        update(Gdx.graphics.getDeltaTime());
-    }
 
     public void update (float deltaTime) {
+
         if (keys.containsKey(Keys.W) || keys.containsKey(Keys.Z)) {
             player.moveForward(deltaTime);
         }
@@ -103,6 +97,12 @@ public class InputManager extends InputAdapter {
             player.jump(deltaTime);
         }
 
+        refreshCameraPosition();
+
         camera.update(true);
+    }
+
+    private void refreshCameraPosition() {
+        camera.position.set(player.getPosition());
     }
 }

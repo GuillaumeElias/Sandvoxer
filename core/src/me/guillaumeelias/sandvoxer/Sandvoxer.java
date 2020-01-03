@@ -95,13 +95,14 @@ public class Sandvoxer extends ApplicationAdapter {
 	@Override
 	public void render () {
 
-		player.gravity();
+		float deltaTime = Gdx.graphics.getDeltaTime();
+
+		player.gravity(deltaTime);
 
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-		//inputManager.update();
-		inputManager.refreshCamera();
+		inputManager.update(deltaTime);
 
 		//RENDER MODELS
 		modelBatch.begin(cam);

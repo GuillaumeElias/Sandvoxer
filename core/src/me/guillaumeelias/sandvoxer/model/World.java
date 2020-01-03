@@ -212,19 +212,15 @@ public class World {
         int ziMax = (int) Math.ceil(z + depth / Voxel.CUBE_SIZE );
 
         BoundingBox playerBox = buildBoundingBox(x, y, z, width, height, depth);
-        Vector3 min = new Vector3();
-        Vector3 max = new Vector3();
-        BoundingBox tmpBoundingBox = new BoundingBox();
 
         for (int xi = xiMin; xi < xiMax; xi += 1) {
             for (int yi = yiMin; yi < yiMax; yi += 1) {
                 for (int zi = ziMin; zi < ziMax; zi += 1) {
-                    if(getCubeOrNull(xi,yi,zi) == null)continue;
 
-                    min.set(xi*Voxel.CUBE_SIZE, yi*Voxel.CUBE_SIZE, zi*Voxel.CUBE_SIZE);
-                    max.set(xi*Voxel.CUBE_SIZE + Voxel.CUBE_SIZE, yi*Voxel.CUBE_SIZE + Voxel.CUBE_SIZE, zi*Voxel.CUBE_SIZE + Voxel.CUBE_SIZE);
-                    tmpBoundingBox.set(min, max);
-                    if(playerBox.intersects(tmpBoundingBox)){
+                    Voxel cube = getCubeOrNull(xi,yi,zi);
+                    if(cube == null) continue;
+
+                    if(playerBox.intersects(cube.boundingBox)){
                         return true;
                     }
                 }

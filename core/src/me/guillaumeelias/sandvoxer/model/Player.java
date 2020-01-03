@@ -1,6 +1,5 @@
 package me.guillaumeelias.sandvoxer.model;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector3;
 
@@ -19,18 +18,17 @@ public class Player {
     private final float JUMP_VELOCITY = 1.2f;
     private final float ROT_SPEED = 0.2f;
 
+    private Vector3 position;
+    private boolean inAir;
 
-    Vector3 position;
-    boolean inAir;
+    private World world;
 
-    World world;
-
-    Camera cam;
+    private Camera cam;
 
     private float yVelocity;
 
-    Vector3 _tmp;
-    Vector3 _oldPosition;
+    private Vector3 _tmp;
+    private Vector3 _oldPosition;
 
     private int _mouseX;
     private int _mouseY;
@@ -49,13 +47,11 @@ public class Player {
         yVelocity = 0;
     }
 
-    public void gravity() {
-
-        float delta_time = Gdx.graphics.getDeltaTime();
+    public void gravity(float deltaTime) {
 
         if (yVelocity > 0) {
             if (yVelocity > -FALL_MAX_VELOCITY) {
-                yVelocity -= GRAVITY_VELOCITY * delta_time;
+                yVelocity -= GRAVITY_VELOCITY * deltaTime;
             }
         }
 
@@ -74,12 +70,11 @@ public class Player {
         } else {
             inAir = true;
             if (yVelocity == 0) {
-                yVelocity = -GRAVITY_VELOCITY * delta_time;
+                yVelocity = -GRAVITY_VELOCITY * deltaTime;
             } else if (yVelocity > -FALL_MAX_VELOCITY) {
-                yVelocity -= GRAVITY_VELOCITY * delta_time;
+                yVelocity -= GRAVITY_VELOCITY * deltaTime;
             }
         }
-
     }
 
 
@@ -137,7 +132,6 @@ public class Player {
             position.set(_oldPosition);
         }
 
-
         //if (world.isGround((int) position.x, (int) (position.y - PLAYER_HEIGHT), (int) position.z)) {
         //if(checkCollision()){
             //position.set(_oldPosition);
@@ -163,7 +157,6 @@ public class Player {
         if(checkCollision()){
             position.set(_oldPosition);
         }
-
     }
 
     public void jump(float deltaTime) {
@@ -219,6 +212,5 @@ public class Player {
     public float getZ() {
         return position.z;
     }
-
 
 }
