@@ -14,8 +14,8 @@ import java.util.List;
 
 public class World {
 
-    public static final int DISTANCE_MAX = 50;
-    public static final float RAY_CASTING_STEP = 1; //TODO
+    public static final int DISTANCE_MAX = 60;
+    public static final int RAY_CASTING_STEP = 1;
 
     public static final int GRID_SIZE = 200;
     public static final int WORLD_SIDE_LENGTH = GRID_SIZE;
@@ -60,13 +60,13 @@ public class World {
     }
 
     public void onClickBlock(Vector3 rayFrom, Vector3 rayTo){
-        Voxel pointedVoxel = findCubeAtRay(rayFrom, rayTo);
+        HitVoxel hitVoxel = findCubeAtRay(rayFrom, rayTo);
 
         int newXi;
         int newYi;
         int newZi;
 
-        if(pointedVoxel == null)
+        if(hitVoxel == null)
         {
             rayTo.nor();
             rayTo.scl(Player.NEW_BLOCK_REACH);
@@ -77,27 +77,28 @@ public class World {
             newZi = Math.round(rayFrom.z / Voxel.CUBE_SIZE );
 
         }else{
+            Voxel pointedVoxel = hitVoxel.voxel;
 
             newXi = pointedVoxel.xi;
             newYi = pointedVoxel.yi;
             newZi = pointedVoxel.zi;
 
-            if(pointedVoxel.yi * Voxel.CUBE_SIZE < player.getY() - 1){ //LOOKING AT TOP FACE
+
+            if(pointedVoxel.boundingBox.getCenterY() < player.getY() - 1){ //LOOKING AT TOP FACE
                 newYi++;
-            }else{ //LOOKING AT A SIDE
+            }else{ //LOOKING AT A SIDE    //TODO handle adding from below
 
-                double radZiXi = Math.atan2( //find out horizontal angle between player and pointed voxel
-                        pointedVoxel.zi * Voxel.CUBE_SIZE - player.getZ(),
-                        pointedVoxel.xi * Voxel.CUBE_SIZE - player.getX()
-                ) ;
+                int aXi = Math.round(hitVoxel.incisionPoint.x / Voxel.CUBE_SIZE );
+                //int aYi = Math.round(hitVoxel.incisionPoint.y / Voxel.CUBE_SIZE );
+                int aZi = Math.round(hitVoxel.incisionPoint.z / Voxel.CUBE_SIZE );
 
-                if(radZiXi > -FOURTH_OF_PI && radZiXi < FOURTH_OF_PI){
+                if(aXi < pointedVoxel.xi){
                     newXi--;
-                }else if( radZiXi > FOURTH_OF_PI && radZiXi < THREE_FOURTH_OF_PI){
+                }else if(aZi < pointedVoxel.zi){
                     newZi--;
-                }else if( radZiXi < -FOURTH_OF_PI && radZiXi > -THREE_FOURTH_OF_PI){
+                }else if(aZi > pointedVoxel.zi){
                     newZi++;
-                }else{
+                }else {
                     newXi++;
                 }
             }
@@ -121,10 +122,11 @@ public class World {
     }
 
     public void onRightClickBlock(Vector3 rayFrom, Vector3 rayTo) {
-        Voxel pointedVoxel = findCubeAtRay(rayFrom, rayTo);
+        HitVoxel hitVoxel = findCubeAtRay(rayFrom, rayTo);
 
-        if(pointedVoxel != null)
+        if(hitVoxel != null)
         {
+            Voxel pointedVoxel = hitVoxel.voxel;
             /*if(pointedVoxel.type == VoxelType.RANDOM_COLOR){
                 pointedVoxel.getModelInstance().model.dispose();
             }*/
@@ -159,7 +161,7 @@ public class World {
     }
 
 
-    public Voxel findCubeAtRay(Vector3 rayFrom, Vector3 rayTo){
+    public HitVoxel findCubeAtRay(Vector3 rayFrom, Vector3 rayTo){
         Vector3 tmp = new Vector3(rayFrom);
         Vector3 step = new Vector3(rayTo);
 
@@ -168,8 +170,7 @@ public class World {
             Voxel voxel = getVoxel(tmp.x, tmp.y, tmp.z);
             if(voxel != null)
             {
-                Gdx.app.log("onClickBlock","hit !");
-                return voxel;
+                return new HitVoxel(voxel, tmp.sub(step));
             }
             tmp.add(step);
         }
@@ -256,5 +257,15 @@ public class World {
 
     private static BoundingBox buildBoundingBox(float x, float y, float z, int width, int height, int depth ){
         return new BoundingBox(new Vector3(x, y, z), new Vector3(x + width, y + height, z + depth));
+    }
+
+    private static class HitVoxel {
+        Voxel voxel;
+        Vector3 incisionPoint;
+
+        public HitVoxel(Voxel voxel, Vector3 tmp) {
+            this.voxel = voxel;
+            this.incisionPoint = tmp;
+        }
     }
 }
