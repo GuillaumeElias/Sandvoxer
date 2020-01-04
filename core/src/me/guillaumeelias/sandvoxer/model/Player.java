@@ -18,6 +18,7 @@ public class Player {
     private final float FALL_MAX_VELOCITY = 3f;
     private final float JUMP_VELOCITY = 1.2f;
     private final float ROT_SPEED = 0.2f;
+    private final float UP_CHECK_MARGIN = 5.f;
 
     private Vector3 position;
     private boolean inAir;
@@ -51,9 +52,13 @@ public class Player {
     public void gravity(float deltaTime) {
 
         if (yVelocity > 0) {
-            if (yVelocity > -FALL_MAX_VELOCITY) {
-                yVelocity -= GRAVITY_VELOCITY * deltaTime;
+
+            if(world.checkBoxCollision(position.x, position.y + yVelocity + UP_CHECK_MARGIN, position.z, PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_DEPTH)){
+                yVelocity = 0;
+                //TODO set to minus something if bouncy material
             }
+
+            yVelocity -= GRAVITY_VELOCITY * deltaTime;
         }
 
         _oldPosition.set(position);
@@ -66,7 +71,7 @@ public class Player {
             position.set(_oldPosition);
 
             inAir = false;
-            //TODO if bounce yVelocity++;
+            //TODO if bouncy material => yVelocity++;
 
         } else {
             inAir = true;
