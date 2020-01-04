@@ -1,5 +1,6 @@
 package me.guillaumeelias.sandvoxer.model;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector3;
 
@@ -83,6 +84,9 @@ public class Player {
         int magX = (int) Math.abs(_mouseX - screenX);
         int magY = (int) Math.abs(_mouseY - screenY);
 
+        Vector3 oldCamDir = cam.direction.cpy();
+        Vector3 oldCamUp = cam.up.cpy();
+
         if (_mouseX > screenX) {
             cam.rotate(Vector3.Y, 1 * magX * ROT_SPEED);
             cam.update();
@@ -103,6 +107,12 @@ public class Player {
 
             if (cam.direction.y < 0.965)
                 cam.rotate(cam.direction.cpy().crs(Vector3.Y), 1 * magY * ROT_SPEED);
+            cam.update();
+        }
+
+        if(cam.up.y < 0){ //if the camera was flipped, revert to old directions //TODO find more elegant solution
+            cam.up.set(oldCamUp);
+            cam.direction.set(oldCamDir);
             cam.update();
         }
 
