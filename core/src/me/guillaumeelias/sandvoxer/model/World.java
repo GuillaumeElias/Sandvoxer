@@ -83,24 +83,24 @@ public class World {
             newYi = pointedVoxel.yi;
             newZi = pointedVoxel.zi;
 
-            int aXi = Math.round(hitVoxel.incisionPoint.x / Voxel.CUBE_SIZE );
-            int aYi = Math.round(hitVoxel.incisionPoint.y / Voxel.CUBE_SIZE );
-            int aZi = Math.round(hitVoxel.incisionPoint.z / Voxel.CUBE_SIZE );
+            int aXi = Math.round(hitVoxel.incisionPoint.x / Voxel.CUBE_SIZE);
+            int aYi = Math.round(hitVoxel.incisionPoint.y / Voxel.CUBE_SIZE);
+            int aZi = Math.round(hitVoxel.incisionPoint.z / Voxel.CUBE_SIZE);
 
-            if(aYi > pointedVoxel.yi){ //CLICKED ON TOP FACE
+            if (aYi > pointedVoxel.yi) { //CLICKED ON TOP FACE
                 newYi++;
-            }else{ //CLICKED ON AT A SIDE    //TODO handle adding from below
-
-                if(aXi < pointedVoxel.xi){
-                    newXi--;
-                }else if(aZi < pointedVoxel.zi){
-                    newZi--;
-                }else if(aZi > pointedVoxel.zi){
-                    newZi++;
-                }else {
-                    newXi++;
-                }
+            }else if (aYi < pointedVoxel.yi){ //CLICKED ON BOTTOM FACE
+                newYi--;
+            }else if(aXi < pointedVoxel.xi){
+                newXi--;
+            }else if(aZi < pointedVoxel.zi){
+                newZi--;
+            }else if(aZi > pointedVoxel.zi){
+                newZi++;
+            }else {
+                newXi++;
             }
+
         }
 
         if( newXi < 0 || newXi >= GRID_SIZE ||
