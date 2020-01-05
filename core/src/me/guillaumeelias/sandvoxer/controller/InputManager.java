@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.IntIntMap;
+import me.guillaumeelias.sandvoxer.Sandvoxer;
 import me.guillaumeelias.sandvoxer.model.Player;
 import me.guillaumeelias.sandvoxer.model.World;
 
@@ -16,13 +17,15 @@ public class InputManager extends InputAdapter {
 
     private final Player player;
     private final World world;
+    private Sandvoxer sandvoxer;
 
     private final IntIntMap keys = new IntIntMap();
 
-    public InputManager (Camera camera, Player player, World world) {
+    public InputManager (Camera camera, Player player, World world, Sandvoxer sandvoxer) {
         this.camera = camera;
         this.player = player;
         this.world = world;
+        this.sandvoxer = sandvoxer;
     }
 
     @Override
@@ -96,6 +99,10 @@ public class InputManager extends InputAdapter {
         if (keys.containsKey(Keys.SPACE)) {
             player.jump(deltaTime);
         }
+        if(keys.containsKey(Keys.ESCAPE) || keys.containsKey(Keys.MEDIA_PLAY_PAUSE)){
+            keys.clear();
+            sandvoxer.switchToMenuScreen();
+        }
 
         refreshCameraPosition();
 
@@ -104,5 +111,9 @@ public class InputManager extends InputAdapter {
 
     private void refreshCameraPosition() {
         camera.position.set(player.getPosition());
+    }
+
+    public void clearMouse() {
+        player.clearMouse();
     }
 }

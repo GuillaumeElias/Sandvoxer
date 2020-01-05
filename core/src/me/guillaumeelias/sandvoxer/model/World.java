@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
-import me.guillaumeelias.sandvoxer.Sandvoxer;
 import me.guillaumeelias.sandvoxer.view.VoxelModelFactory;
 import me.guillaumeelias.sandvoxer.view.VoxelType;
 
@@ -22,19 +21,14 @@ public class World {
 
     public static final int PLATFORM_SIZE = 20;
 
-    static final double FOURTH_OF_PI = Math.PI / 4;
-    static final double THREE_FOURTH_OF_PI = FOURTH_OF_PI * 3;
-
     private final VoxelModelFactory voxelModelFactory;
 
     private Voxel cubes[][][];
-    private Sandvoxer sandvoxer;
     private Player player;
 
     private List<ModelInstance> modelInstances;
 
-    public World(Sandvoxer sandvoxer, VoxelModelFactory voxelModelFactory){
-        this.sandvoxer = sandvoxer;
+    public World(VoxelModelFactory voxelModelFactory){
         this.voxelModelFactory = voxelModelFactory;
         this.modelInstances = new ArrayList<>(WORLD_SIDE_LENGTH*WORLD_SIDE_LENGTH);
 

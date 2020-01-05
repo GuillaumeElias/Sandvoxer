@@ -228,4 +228,9 @@ public class Player {
         return position.z;
     }
 
+    public void clearMouse() {
+        _mouseX = 0;
+        _mouseY = 0;
+    }
+
 }
