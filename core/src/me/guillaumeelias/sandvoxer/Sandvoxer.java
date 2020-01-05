@@ -1,6 +1,7 @@
 package me.guillaumeelias.sandvoxer;
 
 import com.badlogic.gdx.Game;
+import me.guillaumeelias.sandvoxer.view.VoxelModelFactory;
 import me.guillaumeelias.sandvoxer.view.screen.GameScreen;
 import me.guillaumeelias.sandvoxer.view.screen.MenuScreen;
 
@@ -32,6 +33,6 @@ public class Sandvoxer extends Game {
 
 	@Override
 	public void dispose() {
-
+		VoxelModelFactory.disposeAll();
 	}
 }

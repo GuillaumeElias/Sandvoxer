@@ -139,12 +139,9 @@ public class MenuScreen extends InputListener implements Screen {
     @Override
     public boolean keyDown(InputEvent event, int keycode) {
 
-        Gdx.app.log("keydown",""+keycode);
-
         if(keycode == Input.Keys.ENTER ){
             sandvoxer.switchToGameScreen();
         }
-
         return super.keyDown(event, keycode);
     }
 

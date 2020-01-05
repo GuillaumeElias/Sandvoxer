@@ -1,11 +1,9 @@
 package me.guillaumeelias.sandvoxer.model;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
-import me.guillaumeelias.sandvoxer.view.VoxelModelFactory;
 import me.guillaumeelias.sandvoxer.view.VoxelType;
 
 import java.util.ArrayList;
@@ -21,15 +19,12 @@ public class World {
 
     public static final int PLATFORM_SIZE = 20;
 
-    private final VoxelModelFactory voxelModelFactory;
-
     private Voxel cubes[][][];
     private Player player;
 
     private List<ModelInstance> modelInstances;
 
-    public World(VoxelModelFactory voxelModelFactory){
-        this.voxelModelFactory = voxelModelFactory;
+    public World(){
         this.modelInstances = new ArrayList<>(WORLD_SIDE_LENGTH*WORLD_SIDE_LENGTH);
 
         cubes = new Voxel[WORLD_SIDE_LENGTH][WORLD_SIDE_LENGTH][WORLD_SIDE_LENGTH];
@@ -42,9 +37,7 @@ public class World {
     private void initializePlatform(int yi, int posX, int posZ, VoxelType voxelType){
         for (int xi = posX; xi < posX + PLATFORM_SIZE; xi += 1) {
             for (int zi = posZ; zi < posZ + PLATFORM_SIZE; zi += 1) {
-                Model model = voxelModelFactory.buildModelType(voxelType);
-
-                ModelInstance modelInstance = new ModelInstance(model);
+                ModelInstance modelInstance = new ModelInstance(voxelType.getModel());
                 modelInstance.transform.translate(xi * Voxel.CUBE_SIZE, yi * Voxel.CUBE_SIZE, zi * Voxel.CUBE_SIZE);
 
                 cubes[xi][yi][zi] = new Voxel(xi, yi, zi, modelInstance, voxelType);
@@ -144,9 +137,7 @@ public class World {
         }
 
         //BUILD BOX
-        Model model = voxelModelFactory.buildModelType(VoxelType.SAND);
-
-        ModelInstance modelInstance = new ModelInstance(model);
+        ModelInstance modelInstance = new ModelInstance(VoxelType.SAND.getModel());
         modelInstance.transform.translate(newXi * Voxel.CUBE_SIZE,newYi * Voxel.CUBE_SIZE,newZi * Voxel.CUBE_SIZE);
 
         cubes[newXi][newYi][newZi] = new Voxel(newXi, newYi, newZi, modelInstance, VoxelType.SAND);

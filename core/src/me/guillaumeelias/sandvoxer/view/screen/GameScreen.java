@@ -3,6 +3,8 @@ package me.guillaumeelias.sandvoxer.view.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
@@ -14,18 +16,27 @@ import com.badlogic.gdx.math.Vector3;
 import me.guillaumeelias.sandvoxer.Sandvoxer;
 import me.guillaumeelias.sandvoxer.controller.InputManager;
 import me.guillaumeelias.sandvoxer.model.Player;
+import me.guillaumeelias.sandvoxer.model.PlayerHUD;
 import me.guillaumeelias.sandvoxer.model.World;
 import me.guillaumeelias.sandvoxer.view.VoxelModelFactory;
+import me.guillaumeelias.sandvoxer.view.VoxelType;
 
 public class GameScreen implements Screen {
 
-    public Environment environment;
-    public PerspectiveCamera cam;
+    public static final int HUD_MARGIN_RIGHT = 20;
+    public static final int HUD_MARGIN_BOTTOM = 20;
+    public static final int HUD_FONT_MARGIN_BOTTOM = 30;
+    public static final int HUD_FONT_MARGIN_LEFT = 3;
 
-    public ModelBatch modelBatch;
-    public SpriteBatch spriteBatch;
 
-    public me.guillaumeelias.sandvoxer.controller.InputManager inputManager;
+    private Environment environment;
+    private PerspectiveCamera cam;
+
+    private ModelBatch modelBatch;
+    private SpriteBatch spriteBatch;
+    private BitmapFont font;
+
+    public InputManager inputManager;
     Pixmap pixmap;
     Texture pixmapTexture;
 
@@ -37,9 +48,12 @@ public class GameScreen implements Screen {
 
     World world;
     Player player;
+    PlayerHUD playerHUD;
 
     public GameScreen(Sandvoxer sandvoxer){
         this.sandvoxer = sandvoxer;
+
+        this.font = new BitmapFont(Gdx.files.internal("skin/font_pro_font_windows_20pt.fnt"), false);
 
         //INITIALIZE LIGHT
         environment = new Environment();
@@ -53,9 +67,9 @@ public class GameScreen implements Screen {
         cam.update();
 
         //INITIALIZE DATA
-        voxelModelFactory = new VoxelModelFactory();
-        world = new World(voxelModelFactory);
+        world = new World();
         player = new Player(world, cam);
+        playerHUD = new PlayerHUD();
         world.setPlayer(player);
 
         //INITIALIZE MODELS
@@ -100,30 +114,47 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void render (float delta) {
-
-        float deltaTime = Gdx.graphics.getDeltaTime();
+    public void render (float deltaTime) {
+        int width = Gdx.graphics.getWidth();
+        int height = Gdx.graphics.getHeight();
 
         player.gravity(deltaTime);
 
-        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        Gdx.gl.glViewport(0, 0, width, height);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
+        //poll inputs and update camera
         inputManager.update(deltaTime);
 
-        //RENDER MODELS
+        //render
+        renderModels();
+        renderSprites(width, height);
+    }
+
+    private void renderModels(){
         modelBatch.begin(cam);
         modelBatch.render(world.getModelInstances(), environment);
         modelBatch.render(debugInstance, environment); //RENDER DEBUG MODELS
         modelBatch.end();
-
-        //RENDER SPRITES
-        spriteBatch.begin();
-        spriteBatch.draw(pixmapTexture, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
-        spriteBatch.end();
     }
 
 
+    private void renderSprites(float width, int height){
+        spriteBatch.begin();
+
+        //draw cursor
+        spriteBatch.draw(pixmapTexture, width / 2, height / 2);
+
+        //draw selected voxel type
+        VoxelType selectedVoxelType = playerHUD.getSelectedVoxelType();
+        Sprite sprite = selectedVoxelType.getSprite();
+
+        float hudX = width - sprite.getWidth() - HUD_MARGIN_RIGHT;
+        spriteBatch.draw(sprite, hudX, HUD_MARGIN_BOTTOM);
+        font.draw(spriteBatch, selectedVoxelType.getName(), hudX + HUD_FONT_MARGIN_LEFT, HUD_MARGIN_BOTTOM + sprite.getHeight() + HUD_FONT_MARGIN_BOTTOM);
+
+        spriteBatch.end();
+    }
 
 
     @Override
@@ -149,6 +180,5 @@ public class GameScreen implements Screen {
     public void dispose () {
         modelBatch.dispose();
         pixmap.dispose();
-        voxelModelFactory.disposeAll();
     }
 }
