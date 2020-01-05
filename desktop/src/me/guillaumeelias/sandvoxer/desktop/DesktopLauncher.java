@@ -1,5 +1,6 @@
 package me.guillaumeelias.sandvoxer.desktop;
 
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import me.guillaumeelias.sandvoxer.Sandvoxer;
@@ -10,6 +11,7 @@ public class DesktopLauncher {
 		//config.foregroundFPS = 60;
 		config.width = 1024;
 		config.height = 800;
+		config.addIcon("icon.png", Files.FileType.Internal);
 		new LwjglApplication(new Sandvoxer(), config);
 	}
 }
