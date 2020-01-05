@@ -68,8 +68,8 @@ public class GameScreen implements Screen {
 
         //INITIALIZE DATA
         world = new World();
-        player = new Player(world, cam);
         playerHUD = new PlayerHUD();
+        player = new Player(world, cam, playerHUD);
         world.setPlayer(player);
 
         //INITIALIZE MODELS
@@ -148,11 +148,15 @@ public class GameScreen implements Screen {
 
         //draw selected voxel type
         VoxelType selectedVoxelType = playerHUD.getSelectedVoxelType();
-        Texture texture = selectedVoxelType.getTexture();
 
-        float hudX = width - texture.getWidth() - HUD_MARGIN_RIGHT;
-        spriteBatch.draw(texture, hudX, HUD_MARGIN_BOTTOM);
-        font.draw(spriteBatch, selectedVoxelType.getName(), hudX + HUD_FONT_MARGIN_LEFT, HUD_MARGIN_BOTTOM + texture.getHeight() + HUD_FONT_MARGIN_BOTTOM);
+        if(selectedVoxelType != null){
+            Texture texture = selectedVoxelType.getTexture();
+
+            float hudX = width - texture.getWidth() - HUD_MARGIN_RIGHT;
+            spriteBatch.draw(texture, hudX, HUD_MARGIN_BOTTOM);
+            font.draw(spriteBatch, selectedVoxelType.getName(), hudX + HUD_FONT_MARGIN_LEFT, HUD_MARGIN_BOTTOM + texture.getHeight() + HUD_FONT_MARGIN_BOTTOM);
+
+        }
 
         spriteBatch.end();
     }

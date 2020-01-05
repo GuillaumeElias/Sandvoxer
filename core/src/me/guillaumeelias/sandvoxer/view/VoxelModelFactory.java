@@ -1,6 +1,7 @@
 package me.guillaumeelias.sandvoxer.view;
 
 import com.badlogic.gdx.graphics.VertexAttributes;
+import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import me.guillaumeelias.sandvoxer.model.Item;
@@ -11,35 +12,45 @@ import java.util.Map;
 
 public class VoxelModelFactory {
 
-    private static Map<VoxelType, Model> existingTypes = new HashMap<>();
+    private static Map<VoxelType, Model> voxelModels = new HashMap<>();
+    private static Map<VoxelType, Model> itemsModels = new HashMap<>();
     private static ModelBuilder modelBuilder = new ModelBuilder();
 
     public static Model buildModelForVoxel(VoxelType voxelType){
 
-        if(existingTypes.containsKey(voxelType)){
-            return existingTypes.get(voxelType);
+        if(voxelModels.containsKey(voxelType)){
+            return voxelModels.get(voxelType);
         }
 
-        Model model = modelBuilder.createBox(Voxel.CUBE_SIZE, Voxel.CUBE_SIZE, Voxel.CUBE_SIZE,
-                voxelType.getMaterial(), VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
+        Model model = createBox(voxelType.getMaterial(), Voxel.CUBE_SIZE);
 
-        existingTypes.put(VoxelType.GRASS, model);
+        voxelModels.put(voxelType, model);
 
         return model;
     }
 
     public static Model buildModelForItem(VoxelType voxelType){
 
+        if(itemsModels.containsKey(voxelType)){
+            return itemsModels.get(voxelType);
+        }
 
-        Model model = modelBuilder.createBox(Item.ITEM_SIDE_LENGTH, Item.ITEM_SIDE_LENGTH, Item.ITEM_SIDE_LENGTH,
-                voxelType.getMaterial(), VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
-
+        Model model = createBox(voxelType.getMaterial(), Item.ITEM_SIDE_LENGTH);
+        itemsModels.put(voxelType, model);
 
         return model;
     }
 
+    public static Model createBox(Material material, float sideLength){
+        return modelBuilder.createBox(sideLength, sideLength, sideLength,
+                material, VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
+    }
+
     public static void disposeAll() {
-        for(Map.Entry<VoxelType, Model> entry : existingTypes.entrySet()){
+        for(Map.Entry<VoxelType, Model> entry : voxelModels.entrySet()){
+            entry.getValue().dispose();
+        }
+        for(Map.Entry<VoxelType, Model> entry : itemsModels.entrySet()){
             entry.getValue().dispose();
         }
     }

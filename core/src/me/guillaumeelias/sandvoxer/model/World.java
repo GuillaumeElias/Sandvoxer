@@ -50,7 +50,7 @@ public class World {
     }
 
     private void initializeItems(){
-        createNewItem(new Vector3(100 * Voxel.CUBE_SIZE, Voxel.CUBE_SIZE,Voxel.CUBE_SIZE * 100), VoxelType.SAND);
+        createNewItem(new Vector3(101 * Voxel.CUBE_SIZE, Voxel.CUBE_SIZE,Voxel.CUBE_SIZE * 101), VoxelType.SAND);
     }
 
     private void createNewItem(Vector3 position, VoxelType yieldedVoxelType){
@@ -136,25 +136,48 @@ public class World {
 
     public void addBlock(int newXi, int newYi, int newZi){
 
+        VoxelType voxelTypeSelected = player.getPlayerHUD().getSelectedVoxelType();
+        if(voxelTypeSelected == null) {
+            return;
+        }
+
         //CHECK IF PLAYER IS AT SAME POSITION
+        if(canBuildBlock(newXi, newYi, newZi) == false){
+            return;
+        }
+
+        //BUILD BOX
+        ModelInstance modelInstance = new ModelInstance(voxelTypeSelected.getModel());
+        modelInstance.transform.translate(newXi * Voxel.CUBE_SIZE,newYi * Voxel.CUBE_SIZE,newZi * Voxel.CUBE_SIZE);
+
+        cubes[newXi][newYi][newZi] = new Voxel(newXi, newYi, newZi, modelInstance, voxelTypeSelected);
+        modelInstances.add(modelInstance);
+    }
+
+    private boolean canBuildBlock(int newXi, int newYi, int newZi) {
+
+        int newX = newXi*Voxel.CUBE_SIZE;
+        int newY = newYi*Voxel.CUBE_SIZE;
+        int newZ = newZi*Voxel.CUBE_SIZE;
+
         Vector3 min = new Vector3();
         Vector3 max = new Vector3();
-        min.set(newXi*Voxel.CUBE_SIZE, newYi*Voxel.CUBE_SIZE, newZi*Voxel.CUBE_SIZE);
-        max.set(newXi*Voxel.CUBE_SIZE + Voxel.CUBE_SIZE, newYi*Voxel.CUBE_SIZE + Voxel.CUBE_SIZE, newZi*Voxel.CUBE_SIZE + Voxel.CUBE_SIZE);
+        min.set(newX, newY, newZ);
+        max.set(newX + Voxel.CUBE_SIZE, newY + Voxel.CUBE_SIZE, newZ + Voxel.CUBE_SIZE);
 
         BoundingBox playerBox = buildBoundingBox(player.getX(), player.getY(), player.getZ(), Player.PLAYER_WIDTH, Player.PLAYER_HEIGHT, Player.PLAYER_DEPTH);
 
         if(playerBox.intersects(new BoundingBox(min, max))){
             Gdx.app.log("addBlock", "Can't place box on player position");
-            return;
+            return false;
         }
 
-        //BUILD BOX
-        ModelInstance modelInstance = new ModelInstance(VoxelType.SAND.getModel());
-        modelInstance.transform.translate(newXi * Voxel.CUBE_SIZE,newYi * Voxel.CUBE_SIZE,newZi * Voxel.CUBE_SIZE);
+        if(checkItemCollision(newX, newY, newZ, Voxel.CUBE_SIZE, Voxel.CUBE_SIZE, Voxel.CUBE_SIZE) != null){
+            Gdx.app.log("addBlock", "Can't place box on item");
+            return false;
+        }
 
-        cubes[newXi][newYi][newZi] = new Voxel(newXi, newYi, newZi, modelInstance, VoxelType.SAND);
-        modelInstances.add(modelInstance);
+        return true;
     }
 
 
@@ -256,8 +279,26 @@ public class World {
         this.player = player;
     }
 
+    public Item checkItemCollision(float x, float y, float z, int width, int height, int depth){
+        BoundingBox playerBox = buildBoundingBox(x, y, z, width, height, depth);
+
+        for(Item item : items){
+            if(playerBox.intersects(item.getBoundingBox())){
+                return item;
+            }
+        }
+
+        return null;
+    }
+
+
     private static BoundingBox buildBoundingBox(float x, float y, float z, int width, int height, int depth ){
         return new BoundingBox(new Vector3(x, y, z), new Vector3(x + width, y + height, z + depth));
+    }
+
+    public void removeItem(Item item) {
+        modelInstances.remove(item.getModelInstance());
+        items.remove(item);
     }
 
     private static class HitVoxel {

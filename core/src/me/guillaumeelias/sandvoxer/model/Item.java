@@ -42,4 +42,12 @@ public class Item {
     public void rotate(float deltaTime) {
         modelInstance.transform.rotate(Vector3.Y, deltaTime * ROTATION_SPEED);
     }
+
+    public BoundingBox getBoundingBox() {
+        return boundingBox;
+    }
+
+    public VoxelType getYieldedVoxelType() {
+        return yieldedVoxelType;
+    }
 }

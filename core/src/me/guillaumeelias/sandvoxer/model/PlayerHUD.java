@@ -13,12 +13,17 @@ public class PlayerHUD {
 
     public PlayerHUD(){
         voxelTypes = new ArrayList<>();
-        voxelTypes.add(VoxelType.SAND);
 
         selection = 0; //SAND
     }
 
     public VoxelType getSelectedVoxelType(){
+        if(voxelTypes.isEmpty()) return null;
+
         return voxelTypes.get(selection);
+    }
+
+    public void addVoxelType(VoxelType yieldedVoxelType) {
+        voxelTypes.add(yieldedVoxelType);
     }
 }

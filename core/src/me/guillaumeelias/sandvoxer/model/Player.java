@@ -24,6 +24,7 @@ public class Player {
     private boolean inAir;
 
     private World world;
+    private PlayerHUD playerHUD;
 
     private Camera cam;
 
@@ -35,9 +36,9 @@ public class Player {
     private int _mouseX;
     private int _mouseY;
 
-    public Player(World world, Camera camera) {
+    public Player(World world, Camera camera, PlayerHUD playerHUD) {
         this.position = new Vector3(100 * Voxel.CUBE_SIZE, PLAYER_HEIGHT + 20, 100 * Voxel.CUBE_SIZE);
-
+        this.playerHUD = playerHUD;
         this.world = world;
 
         this._tmp = new Vector3();
@@ -81,6 +82,8 @@ public class Player {
                 yVelocity -= GRAVITY_VELOCITY * deltaTime;
             }
         }
+
+        checkItemsCollision();
     }
 
 
@@ -147,6 +150,8 @@ public class Player {
             position.set(_oldPosition);
         }
 
+        checkItemsCollision();
+
         //if (world.isGround((int) position.x, (int) (position.y - PLAYER_HEIGHT), (int) position.z)) {
         //if(checkCollision()){
             //position.set(_oldPosition);
@@ -172,6 +177,8 @@ public class Player {
         if(checkCollision()){
             position.set(_oldPosition);
         }
+
+        checkItemsCollision();
     }
 
     public void jump(float deltaTime) {
@@ -190,6 +197,8 @@ public class Player {
         if(checkCollision()){
             position.set(_oldPosition);
         }
+
+        checkItemsCollision();
     }
 
     public void strafeRight(float deltaTime){
@@ -201,12 +210,22 @@ public class Player {
         if(checkCollision()){
             position.set(_oldPosition);
         }
+
+        checkItemsCollision();
     }
 
     private boolean checkCollision(){
         return world.checkBoxCollision(position.x, position.y, position.z, PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_DEPTH);
     }
 
+    private void checkItemsCollision(){
+        Item item = world.checkItemCollision(position.x, position.y, position.z, PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_DEPTH);
+        if(item != null){
+            //TODO show dialog
+            playerHUD.addVoxelType(item.getYieldedVoxelType());
+            world.removeItem(item);
+        }
+    }
 
     public double getCameraAngleRad(){
         return -(float)Math.atan2(cam.direction.x, cam.direction.z);
@@ -233,4 +252,7 @@ public class Player {
         _mouseY = 0;
     }
 
+    public PlayerHUD getPlayerHUD() {
+        return playerHUD;
+    }
 }
