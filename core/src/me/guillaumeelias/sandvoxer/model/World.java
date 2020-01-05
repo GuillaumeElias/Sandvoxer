@@ -21,22 +21,25 @@ public class World {
 
     private Voxel cubes[][][];
     private Player player;
+    private List<Item> items;
 
     private List<ModelInstance> modelInstances;
 
     public World(){
         this.modelInstances = new ArrayList<>(WORLD_SIDE_LENGTH*WORLD_SIDE_LENGTH);
+        this.items = new ArrayList<>();
 
         cubes = new Voxel[WORLD_SIDE_LENGTH][WORLD_SIDE_LENGTH][WORLD_SIDE_LENGTH];
 
         //INITIALIZE PLATFORMS
         initializePlatform(0, 90, 90, VoxelType.GRASS);
         initializePlatform(20, 60, 120, VoxelType.WOOD);
+        initializeItems();
     }
 
-    private void initializePlatform(int yi, int posX, int posZ, VoxelType voxelType){
-        for (int xi = posX; xi < posX + PLATFORM_SIZE; xi += 1) {
-            for (int zi = posZ; zi < posZ + PLATFORM_SIZE; zi += 1) {
+    private void initializePlatform(int yi, int posXi, int posZi, VoxelType voxelType){
+        for (int xi = posXi; xi < posXi + PLATFORM_SIZE; xi += 1) {
+            for (int zi = posZi; zi < posZi + PLATFORM_SIZE; zi += 1) {
                 ModelInstance modelInstance = new ModelInstance(voxelType.getModel());
                 modelInstance.transform.translate(xi * Voxel.CUBE_SIZE, yi * Voxel.CUBE_SIZE, zi * Voxel.CUBE_SIZE);
 
@@ -44,6 +47,16 @@ public class World {
                 modelInstances.add(modelInstance);
             }
         }
+    }
+
+    private void initializeItems(){
+        createNewItem(new Vector3(100 * Voxel.CUBE_SIZE, Voxel.CUBE_SIZE,Voxel.CUBE_SIZE * 100), VoxelType.SAND);
+    }
+
+    private void createNewItem(Vector3 position, VoxelType yieldedVoxelType){
+        Item item = new Item(position, yieldedVoxelType);
+        items.add(item);
+        modelInstances.add(item.getModelInstance());
     }
 
     public void onClickBlock(Vector3 rayFrom, Vector3 rayTo){
@@ -233,6 +246,10 @@ public class World {
 
     public List<ModelInstance> getModelInstances() {
         return modelInstances;
+    }
+
+    public List<Item> getItems() {
+        return items;
     }
 
     public void setPlayer(Player player) {

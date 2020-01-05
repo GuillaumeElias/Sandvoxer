@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
@@ -15,6 +14,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import me.guillaumeelias.sandvoxer.Sandvoxer;
 import me.guillaumeelias.sandvoxer.controller.InputManager;
+import me.guillaumeelias.sandvoxer.model.Item;
 import me.guillaumeelias.sandvoxer.model.Player;
 import me.guillaumeelias.sandvoxer.model.PlayerHUD;
 import me.guillaumeelias.sandvoxer.model.World;
@@ -119,6 +119,7 @@ public class GameScreen implements Screen {
         int height = Gdx.graphics.getHeight();
 
         player.gravity(deltaTime);
+        animateModels(deltaTime);
 
         Gdx.gl.glViewport(0, 0, width, height);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
@@ -147,15 +148,20 @@ public class GameScreen implements Screen {
 
         //draw selected voxel type
         VoxelType selectedVoxelType = playerHUD.getSelectedVoxelType();
-        Sprite sprite = selectedVoxelType.getSprite();
+        Texture texture = selectedVoxelType.getTexture();
 
-        float hudX = width - sprite.getWidth() - HUD_MARGIN_RIGHT;
-        spriteBatch.draw(sprite, hudX, HUD_MARGIN_BOTTOM);
-        font.draw(spriteBatch, selectedVoxelType.getName(), hudX + HUD_FONT_MARGIN_LEFT, HUD_MARGIN_BOTTOM + sprite.getHeight() + HUD_FONT_MARGIN_BOTTOM);
+        float hudX = width - texture.getWidth() - HUD_MARGIN_RIGHT;
+        spriteBatch.draw(texture, hudX, HUD_MARGIN_BOTTOM);
+        font.draw(spriteBatch, selectedVoxelType.getName(), hudX + HUD_FONT_MARGIN_LEFT, HUD_MARGIN_BOTTOM + texture.getHeight() + HUD_FONT_MARGIN_BOTTOM);
 
         spriteBatch.end();
     }
 
+    public void animateModels(float deltaTime){
+        for(Item item : world.getItems()){
+            item.rotate(deltaTime); //TODO migrate to item view
+        }
+    }
 
     @Override
     public void resize(int width, int height) {
