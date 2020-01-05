@@ -1,12 +1,16 @@
 package me.guillaumeelias.sandvoxer.view.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -14,7 +18,10 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import me.guillaumeelias.sandvoxer.Sandvoxer;
 
-public class MenuScreen implements Screen {
+public class MenuScreen extends InputListener implements Screen {
+
+    private final static Texture LOGO_TEXTURE = new Texture("logo.png");
+    private final static int MARGIN_TOP = 20;
 
     private SpriteBatch batch;
     OrthographicCamera camera;
@@ -36,9 +43,6 @@ public class MenuScreen implements Screen {
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         camera.update();
 
-        stage = new Stage(viewport, batch);
-
-        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
@@ -46,6 +50,10 @@ public class MenuScreen implements Screen {
         batch = new SpriteBatch();
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
         stage = new Stage();
+
+        Image logoImage = new Image(LOGO_TEXTURE);
+        logoImage.setPosition(Gdx.graphics.getWidth() /2 - LOGO_TEXTURE.getWidth() / 2, Gdx.graphics.getHeight() - LOGO_TEXTURE.getHeight() - MARGIN_TOP);
+        stage.addActor(logoImage);
 
         //Start game button
         final TextButton startButton = createButton(firstTimeShowing ? "Start game" : "Resume");
@@ -87,6 +95,7 @@ public class MenuScreen implements Screen {
 
         Gdx.input.setInputProcessor(stage);
         Gdx.input.setCursorCatched(false);
+        stage.addListener(this);
 
         firstTimeShowing = false;
     }
@@ -127,6 +136,18 @@ public class MenuScreen implements Screen {
         skin.dispose();
     }
 
+    @Override
+    public boolean keyDown(InputEvent event, int keycode) {
+
+        Gdx.app.log("keydown",""+keycode);
+
+        if(keycode == Input.Keys.ENTER ){
+            sandvoxer.switchToGameScreen();
+        }
+
+        return super.keyDown(event, keycode);
+    }
+
     private TextButton createButton(String text){
         TextButton button = new TextButton(text, skin, "default");
 
@@ -134,4 +155,5 @@ public class MenuScreen implements Screen {
         button.setHeight(20f);
         return button;
     }
+
 }
