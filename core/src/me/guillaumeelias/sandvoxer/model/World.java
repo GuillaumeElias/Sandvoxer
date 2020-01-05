@@ -147,11 +147,21 @@ public class World {
         }
 
         //BUILD BOX
-        ModelInstance modelInstance = new ModelInstance(voxelTypeSelected.getModel());
-        modelInstance.transform.translate(newXi * Voxel.CUBE_SIZE,newYi * Voxel.CUBE_SIZE,newZi * Voxel.CUBE_SIZE);
+        placeBlock(newXi, newYi, newZi, voxelTypeSelected);
+    }
 
-        cubes[newXi][newYi][newZi] = new Voxel(newXi, newYi, newZi, modelInstance, voxelTypeSelected);
+    private void placeBlock(int xi, int yi, int zi, VoxelType voxelType){
+        ModelInstance modelInstance = new ModelInstance(voxelType.getModel());
+        modelInstance.transform.translate(xi * Voxel.CUBE_SIZE,yi * Voxel.CUBE_SIZE,zi * Voxel.CUBE_SIZE);
+
+        cubes[xi][yi][zi] = new Voxel(xi, yi, zi, modelInstance, voxelType);
         modelInstances.add(modelInstance);
+    }
+
+    public void restoreSpawnBlockIfDestructed(){
+        if(getCube(Player.PLAYER_INIT_XI,Player.PLAYER_INIT_YI,Player.PLAYER_INIT_ZI) == null){
+            placeBlock(Player.PLAYER_INIT_XI,Player.PLAYER_INIT_YI,Player.PLAYER_INIT_ZI, VoxelType.GRASS);
+        }
     }
 
     private boolean canBuildBlock(int newXi, int newYi, int newZi) {

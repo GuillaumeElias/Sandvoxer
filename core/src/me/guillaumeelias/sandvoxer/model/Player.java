@@ -1,6 +1,5 @@
 package me.guillaumeelias.sandvoxer.model;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector3;
 
@@ -13,12 +12,18 @@ public class Player {
     public static final int PLAYER_DEPTH = 7;
     public static final float NEW_BLOCK_REACH = 40f;
 
-    private final float MOVE_VELOCITY = 50;
-    private final float GRAVITY_VELOCITY = 0.8f;
-    private final float FALL_MAX_VELOCITY = 3f;
-    private final float JUMP_VELOCITY = 1.2f;
-    private final float ROT_SPEED = 0.2f;
-    private final float UP_CHECK_MARGIN = 5.f;
+    public static final int PLAYER_INIT_XI = 100;
+    public static final int PLAYER_INIT_ZI = 100;
+    public static final int PLAYER_INIT_YI = 0;
+
+    private static final float MOVE_VELOCITY = 50;
+    private static final float GRAVITY_VELOCITY = 0.8f;
+    private static final float FALL_MAX_VELOCITY = 3f;
+    private static final float JUMP_VELOCITY = 1.2f;
+    private static final float ROT_SPEED = 0.2f;
+    private static final float UP_CHECK_MARGIN = 5.f;
+
+    private final int Y_DEATH_LIMIT = 30;
 
     private Vector3 position;
     private boolean inAir;
@@ -37,7 +42,6 @@ public class Player {
     private int _mouseY;
 
     public Player(World world, Camera camera, PlayerHUD playerHUD) {
-        this.position = new Vector3(100 * Voxel.CUBE_SIZE, PLAYER_HEIGHT + 20, 100 * Voxel.CUBE_SIZE);
         this.playerHUD = playerHUD;
         this.world = world;
 
@@ -45,6 +49,11 @@ public class Player {
         this._oldPosition = new Vector3();
 
         this.cam = camera;
+        birth();
+    }
+
+    public void birth(){
+        this.position = new Vector3(PLAYER_INIT_XI * Voxel.CUBE_SIZE, PLAYER_INIT_YI + PLAYER_HEIGHT + 20, PLAYER_INIT_ZI * Voxel.CUBE_SIZE);
         this.cam.lookAt(10, PLAYER_HEIGHT, 10);
 
         yVelocity = 0;
@@ -212,6 +221,14 @@ public class Player {
         }
 
         checkItemsCollision();
+    }
+
+    public boolean isDead(){
+        int yi = Math.round(getY() / Voxel.CUBE_SIZE );
+        if( yi < -Y_DEATH_LIMIT ){
+            return true;
+        }
+        return false;
     }
 
     private boolean checkCollision(){

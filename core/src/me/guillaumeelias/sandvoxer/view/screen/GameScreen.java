@@ -130,6 +130,14 @@ public class GameScreen implements Screen {
         //render
         renderModels();
         renderSprites(width, height);
+
+        if(player.isDead()){
+            inputManager.update(deltaTime);
+            player.birth();
+            cam.up.set(Vector3.Y);
+            world.restoreSpawnBlockIfDestructed();
+            //TODO show message
+        }
     }
 
     private void renderModels(){
