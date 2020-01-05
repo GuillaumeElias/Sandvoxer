@@ -90,7 +90,7 @@ public class InputManager extends InputAdapter {
         if (keys.containsKey(Keys.A) || keys.containsKey(Keys.Q)) {
             player.strafeLeft(deltaTime);
         }
-        if (keys.containsKey(Keys.D) || keys.containsKey(Keys.Q)) {
+        if (keys.containsKey(Keys.D)) {
             player.strafeRight(deltaTime);
         }
         if (keys.containsKey(Keys.SPACE)) {
