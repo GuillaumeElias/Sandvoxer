@@ -15,12 +15,11 @@ import java.util.Map;
 
 public class VoxelModelFactory {
 
-    private static Texture GRASS_TEXTURE = new Texture("grass.png");
-    private static Texture WOOD_TEXTURE = new Texture("wood.png");
-    private static Texture SAND_TEXTURE = new Texture("sand.png");
-
-
-    static { //TODO create
+    private static Texture GRASS_TEXTURE = new Texture("textures/grass.png");
+    private static Texture WOOD_TEXTURE = new Texture("textures/wood.png");
+    private static Texture SAND_TEXTURE = new Texture("textures/sand.png");
+    
+    static {
         GRASS_TEXTURE.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
         GRASS_TEXTURE.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
