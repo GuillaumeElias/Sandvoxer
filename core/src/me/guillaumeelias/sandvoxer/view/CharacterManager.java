@@ -2,6 +2,7 @@ package me.guillaumeelias.sandvoxer.view;
 
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
 import me.guillaumeelias.sandvoxer.model.Character;
 
 import java.util.ArrayList;
@@ -34,5 +35,20 @@ public class CharacterManager {
 
     public List<ModelInstance> getModelInstances() {
         return modelInstances;
+    }
+
+    public List<Character> getCharacterList() {
+        return characterList;
+    }
+
+    public Character checkCharacterCollision(BoundingBox boundingBox){
+
+        for(Character c : characterList){
+            if(boundingBox.intersects(c.getBoundingBox())){
+                return c;
+            }
+        }
+
+        return null;
     }
 }

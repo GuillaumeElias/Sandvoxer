@@ -10,8 +10,10 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.graphics.g3d.utils.shapebuilders.BoxShapeBuilder;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
 import me.guillaumeelias.sandvoxer.Sandvoxer;
 import me.guillaumeelias.sandvoxer.controller.InputManager;
 import me.guillaumeelias.sandvoxer.model.Item;
@@ -20,6 +22,9 @@ import me.guillaumeelias.sandvoxer.model.PlayerHUD;
 import me.guillaumeelias.sandvoxer.model.World;
 import me.guillaumeelias.sandvoxer.view.CharacterManager;
 import me.guillaumeelias.sandvoxer.view.VoxelType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameScreen implements Screen {
 
@@ -40,8 +45,8 @@ public class GameScreen implements Screen {
     Pixmap pixmap;
     Texture pixmapTexture;
 
-    Model debugModel;
-    ModelInstance debugInstance;
+    //List<Model> debugModels;
+    List<ModelInstance> debugInstances = new ArrayList<>();
 
     private Sandvoxer sandvoxer;
 
@@ -67,16 +72,14 @@ public class GameScreen implements Screen {
         cam.update();
 
         //INITIALIZE DATA
-        world = new World();
+        characterManager = new CharacterManager();
+        world = new World(characterManager, this);
         playerHUD = new PlayerHUD();
         player = new Player(world, cam, playerHUD);
         world.setPlayer(player);
-        characterManager = new CharacterManager();
 
         //INITIALIZE MODELS
         modelBatch = new ModelBatch();
-
-        createDebugVector(Vector3.Zero, Vector3.Y);
 
         //SET UP INPUTS
         inputManager = new InputManager(cam, player, world, sandvoxer);
@@ -98,6 +101,23 @@ public class GameScreen implements Screen {
 
         Gdx.input.setInputProcessor(inputManager);
         Gdx.input.setCursorCatched(true);
+
+        /*createDebugVector(new Vector3(characterManager.getCharacterList().get(0).getBoundingBox().getCenterX(),
+                characterManager.getCharacterList().get(0).getBoundingBox().getCenterY(),
+                characterManager.getCharacterList().get(0).getBoundingBox().getCenterZ()),
+                characterManager.getCharacterList().get(0).getPosition()
+        );
+        createDebugBox(characterManager.getCharacterList().get(0).getBoundingBox());
+
+        for (int xi = 0; xi < World.GRID_SIZE; xi += 1) {
+            for (int yi = 0; yi < World.GRID_SIZE; yi += 1) {
+                for (int zi = 0; zi < World.GRID_SIZE; zi += 1) {
+                    Voxel cube = world.getCube(xi,yi,zi);
+                    if(cube == null)continue;
+                    createDebugBox(cube.getBoundingBox());
+                }
+            }
+        }*/
     }
 
     public void createDebugVector (Vector3 from, Vector3 to) {
@@ -107,11 +127,23 @@ public class GameScreen implements Screen {
         MeshPartBuilder builder = modelBuilder.part("axes", GL20.GL_LINES, VertexAttributes.Usage.Position | VertexAttributes.Usage.ColorUnpacked, new Material());
         builder.setColor(Color.RED);
         builder.line(from, to);
+
         builder.sphere(new Matrix4().translate(to).rotate(Vector3.Z, 45).scale(1, 1, 1), 1f, 1f, 1f, 12, 16);
         builder.setColor(Color.GREEN);
         builder.sphere(new Matrix4().translate(from).rotate(Vector3.Z, 45).scale(0.5f, 0.5f, 0.5f), 1f, 1f, 1f, 12, 16);
-        debugModel = modelBuilder.end();
-        debugInstance = new ModelInstance(debugModel);
+        Model debugModel = modelBuilder.end();
+        debugInstances.add(new ModelInstance(debugModel));
+    }
+
+    public void createDebugBox (BoundingBox boundingBox) {
+        ModelBuilder builder = new ModelBuilder();
+        builder.begin();
+        builder.node();
+        MeshPartBuilder mpb = builder.part("box", GL20.GL_LINES, VertexAttributes.Usage.Position | VertexAttributes.Usage.ColorUnpacked, new Material());
+        BoxShapeBuilder.build(mpb, boundingBox.min.x, boundingBox.min.y, boundingBox.min.z, boundingBox.getWidth(),  boundingBox.getHeight(), boundingBox.getDepth());
+        Model debugModel = builder.end();
+
+        debugInstances.add(new ModelInstance(debugModel));
     }
 
     @Override
@@ -144,7 +176,7 @@ public class GameScreen implements Screen {
     private void renderModels(){
         modelBatch.begin(cam);
         modelBatch.render(world.getModelInstances(), environment);
-        modelBatch.render(debugInstance, environment); //RENDER DEBUG MODELS
+        modelBatch.render(debugInstances, environment); //RENDER DEBUG MODELS
         modelBatch.render(characterManager.getModelInstances(), environment);
         modelBatch.end();
     }

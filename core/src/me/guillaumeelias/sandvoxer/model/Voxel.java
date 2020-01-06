@@ -34,4 +34,8 @@ public class Voxel {
     public ModelInstance getModelInstance() {
         return modelInstance;
     }
+
+    public BoundingBox getBoundingBox() {
+        return boundingBox;
+    }
 }

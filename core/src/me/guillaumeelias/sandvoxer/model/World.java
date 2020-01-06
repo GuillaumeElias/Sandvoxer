@@ -4,7 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
+import me.guillaumeelias.sandvoxer.view.CharacterManager;
 import me.guillaumeelias.sandvoxer.view.VoxelType;
+import me.guillaumeelias.sandvoxer.view.screen.GameScreen;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +26,13 @@ public class World {
     private List<Item> items;
 
     private List<ModelInstance> modelInstances;
+    private CharacterManager characterManager;
 
-    public World(){
+    private GameScreen gameScreen;
+
+    public World(CharacterManager characterManager, GameScreen gameScreen){
+        this.gameScreen = gameScreen;
+        this.characterManager = characterManager;
         this.modelInstances = new ArrayList<>(WORLD_SIDE_LENGTH*WORLD_SIDE_LENGTH);
         this.items = new ArrayList<>();
 
@@ -174,16 +181,24 @@ public class World {
         Vector3 max = new Vector3();
         min.set(newX, newY, newZ);
         max.set(newX + Voxel.CUBE_SIZE, newY + Voxel.CUBE_SIZE, newZ + Voxel.CUBE_SIZE);
+        BoundingBox newVoxelBox = new BoundingBox(min, max);
+
+        //gameScreen.createDebugBox(newVoxelBox);
 
         BoundingBox playerBox = buildBoundingBox(player.getX(), player.getY(), player.getZ(), Player.PLAYER_WIDTH, Player.PLAYER_HEIGHT, Player.PLAYER_DEPTH);
 
-        if(playerBox.intersects(new BoundingBox(min, max))){
+        if(playerBox.intersects(newVoxelBox)){
             Gdx.app.log("addBlock", "Can't place box on player position");
             return false;
         }
 
         if(checkItemCollision(newX, newY, newZ, Voxel.CUBE_SIZE, Voxel.CUBE_SIZE, Voxel.CUBE_SIZE) != null){
             Gdx.app.log("addBlock", "Can't place box on item");
+            return false;
+        }
+
+        if(characterManager.checkCharacterCollision(newVoxelBox) != null){
+            Gdx.app.log("addBlock", "Can't place box on character");
             return false;
         }
 
@@ -257,6 +272,10 @@ public class World {
                 }
 
             }
+        }
+
+        if(characterManager.checkCharacterCollision(playerBox) != null){
+            return true;
         }
 
         return false;

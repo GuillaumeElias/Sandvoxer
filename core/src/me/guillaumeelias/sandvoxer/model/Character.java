@@ -35,8 +35,13 @@ public class Character {
             }
         });
 
-        float size = type.getBoundingBoxSize();
-        this.boundingBox = new BoundingBox(position, position.cpy().add(size,size,size));
+        int xi = Math.round(position.x / Voxel.CUBE_SIZE );
+        int yi = Math.round(position.y / Voxel.CUBE_SIZE );
+        int zi = Math.round(position.z / Voxel.CUBE_SIZE );
+
+        //create bounding box slightly smaller than a voxel
+        this.boundingBox = new BoundingBox(new Vector3(xi * Voxel.CUBE_SIZE + 1,yi* Voxel.CUBE_SIZE + 1,zi* Voxel.CUBE_SIZE + 1),
+                new Vector3(xi * Voxel.CUBE_SIZE + Voxel.CUBE_SIZE - 1,yi* Voxel.CUBE_SIZE + Voxel.CUBE_SIZE - 1,zi* Voxel.CUBE_SIZE + Voxel.CUBE_SIZE - 1));
     }
 
 
@@ -46,5 +51,13 @@ public class Character {
 
     public AnimationController getAnimationController() {
         return animationController;
+    }
+
+    public BoundingBox getBoundingBox() {
+        return boundingBox;
+    }
+
+    public Vector3 getPosition() {
+        return position;
     }
 }
