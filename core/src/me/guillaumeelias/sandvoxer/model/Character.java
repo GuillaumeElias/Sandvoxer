@@ -1,6 +1,5 @@
 package me.guillaumeelias.sandvoxer.model;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.math.Vector3;
@@ -30,7 +29,6 @@ public class Character {
 
             @Override
             public void onLoop(AnimationController.AnimationDesc animation) {
-                Gdx.app.log("INFO","Animation Ended");
             }
         });
 

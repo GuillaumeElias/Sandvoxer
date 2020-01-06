@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
 
 public class Utils {
 
@@ -27,5 +28,13 @@ public class Utils {
         mouseInWorld2D.y = mouseInWorld3D.y;
 
         return mouseInWorld2D;
+    }
+
+    public static BoundingBox buildBoundingBox(Vector3 position, int width, int height, int depth){
+        return new BoundingBox(position, new Vector3(position.x + width, position.y + height, position.z + depth));
+    }
+
+    public static BoundingBox buildBoundingBox(float x, float y, float z, int width, int height, int depth){
+        return new BoundingBox(new Vector3(x,y,z), new Vector3(x + width, y + height, z + depth));
     }
 }

@@ -1,6 +1,5 @@
 package me.guillaumeelias.sandvoxer.model;
 
-import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
@@ -18,6 +17,8 @@ public class Voxel {
     VoxelType type;
 
     BoundingBox boundingBox;
+
+    Trigger trigger;
 
     public Voxel(int xi, int yi, int zi, ModelInstance modelInstance, VoxelType voxelType){
         this.xi = xi;
@@ -37,5 +38,13 @@ public class Voxel {
 
     public BoundingBox getBoundingBox() {
         return boundingBox;
+    }
+
+    public void setTrigger(Trigger trigger) {
+        this.trigger = trigger;
+    }
+
+    public Trigger getTrigger() {
+        return trigger;
     }
 }

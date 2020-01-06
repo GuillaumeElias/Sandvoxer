@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
+import me.guillaumeelias.sandvoxer.util.Utils;
 import me.guillaumeelias.sandvoxer.view.CharacterManager;
 import me.guillaumeelias.sandvoxer.view.VoxelType;
 import me.guillaumeelias.sandvoxer.view.screen.GameScreen;
@@ -42,6 +43,7 @@ public class World {
         initializePlatform(0, 90, 90, VoxelType.GRASS);
         initializePlatform(18, 130, 130, VoxelType.WOOD);
         initializeItems();
+        initializeTriggers();
     }
 
     private void initializePlatform(int yi, int posXi, int posZi, VoxelType voxelType){
@@ -58,6 +60,10 @@ public class World {
 
     private void initializeItems(){
         createNewItem(new Vector3(95 * Voxel.CUBE_SIZE, Voxel.CUBE_SIZE,Voxel.CUBE_SIZE * 95), VoxelType.SAND);
+    }
+
+    private void initializeTriggers(){
+        cubes[100][0][101].setTrigger(new Trigger(Dialog.CHICKEN_DIALOG_1, Dialog.CHICKEN_DIALOG_REPEAT, 1));
     }
 
     private void createNewItem(Vector3 position, VoxelType yieldedVoxelType){
@@ -185,7 +191,7 @@ public class World {
 
         //gameScreen.createDebugBox(newVoxelBox);
 
-        BoundingBox playerBox = buildBoundingBox(player.getX(), player.getY(), player.getZ(), Player.PLAYER_WIDTH, Player.PLAYER_HEIGHT, Player.PLAYER_DEPTH);
+        BoundingBox playerBox = player.calculateBoundingBox();
 
         if(playerBox.intersects(newVoxelBox)){
             Gdx.app.log("addBlock", "Can't place box on player position");
@@ -249,10 +255,9 @@ public class World {
 
     public boolean checkBoxCollision(float x, float y, float z, int width, int height, int depth){
 
+        BoundingBox playerBox = Utils.buildBoundingBox(x, y, z, width, height, depth);
 
-        BoundingBox playerBox = buildBoundingBox(x, y, z, width, height, depth);
-
-        if(checkVoxelCollision(x,y,z,width,height,depth,playerBox) != null){
+        if(checkVoxelCollision(playerBox) != null){
             return true;
         }
 
@@ -263,15 +268,15 @@ public class World {
         return false;
     }
 
-    public Voxel checkVoxelCollision(float x, float y, float z, int width, int height, int depth, BoundingBox playerBox){
+    public Voxel checkVoxelCollision(BoundingBox playerBox){
 
-        int xiMin = Math.round(x / Voxel.CUBE_SIZE ) - 1;
-        int yiMin = Math.round(y / Voxel.CUBE_SIZE ) - 1;
-        int ziMin = Math.round(z / Voxel.CUBE_SIZE ) - 1;
+        int xiMin = Math.round(playerBox.min.x / Voxel.CUBE_SIZE ) - 1;
+        int yiMin = Math.round(playerBox.min.y / Voxel.CUBE_SIZE ) - 1;
+        int ziMin = Math.round(playerBox.min.z / Voxel.CUBE_SIZE ) - 1;
 
-        int xiMax = Math.round((x + width) / Voxel.CUBE_SIZE ) + 1; //TODO actually if we're only using this with the player, we know how many tiles to check
-        int yiMax = Math.round((y + height)/ Voxel.CUBE_SIZE ) + 1;
-        int ziMax = Math.round((z + depth) / Voxel.CUBE_SIZE ) + 1;
+        int xiMax = Math.round((playerBox.min.x + playerBox.getWidth()) / Voxel.CUBE_SIZE ) + 1; //TODO actually if we're only using this with the player, we know how many tiles to check
+        int yiMax = Math.round((playerBox.min.y + playerBox.getHeight())/ Voxel.CUBE_SIZE ) + 1;
+        int ziMax = Math.round((playerBox.min.z + playerBox.getDepth()) / Voxel.CUBE_SIZE ) + 1;
 
         for (int xi = xiMin; xi < xiMax; xi += 1) {
             for (int yi = yiMin; yi < yiMax; yi += 1) {
@@ -319,7 +324,7 @@ public class World {
     }
 
     public Item checkItemCollision(float x, float y, float z, int width, int height, int depth){
-        BoundingBox playerBox = buildBoundingBox(x, y, z, width, height, depth);
+        BoundingBox playerBox = player.calculateBoundingBox();
 
         for(Item item : items){
             if(playerBox.intersects(item.getBoundingBox())){
@@ -330,14 +335,13 @@ public class World {
         return null;
     }
 
-
-    private static BoundingBox buildBoundingBox(float x, float y, float z, int width, int height, int depth ){
-        return new BoundingBox(new Vector3(x, y, z), new Vector3(x + width, y + height, z + depth));
-    }
-
     public void removeItem(Item item) {
         modelInstances.remove(item.getModelInstance());
         items.remove(item);
+    }
+
+    public CharacterManager getCharacterManager() {
+        return characterManager;
     }
 
     private static class HitVoxel {

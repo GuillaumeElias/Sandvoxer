@@ -2,6 +2,8 @@ package me.guillaumeelias.sandvoxer.model;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
+import me.guillaumeelias.sandvoxer.util.Utils;
 
 public class Player {
 
@@ -182,7 +184,22 @@ public class Player {
     }
 
     private boolean checkCollision(){
-        return world.checkBoxCollision(position.x, position.y, position.z, PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_DEPTH);
+
+        BoundingBox playerBox = calculateBoundingBox();
+
+        Voxel touchedVoxel = world.checkVoxelCollision(playerBox);
+        if( touchedVoxel != null){
+            if(touchedVoxel.getTrigger() != null){
+                touchedVoxel.getTrigger().startTrigger();
+            }
+            return true;
+        }
+
+        if(world.getCharacterManager().checkCharacterCollision(playerBox) != null){
+            return true;
+        }
+
+        return false;
     }
 
     private void checkItemsCollision(){
@@ -192,6 +209,10 @@ public class Player {
             playerHUD.addVoxelType(item.getYieldedVoxelType());
             world.removeItem(item);
         }
+    }
+
+    public BoundingBox calculateBoundingBox(){
+        return Utils.buildBoundingBox(position, PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_DEPTH);
     }
 
     public double getCameraAngleRad(){
