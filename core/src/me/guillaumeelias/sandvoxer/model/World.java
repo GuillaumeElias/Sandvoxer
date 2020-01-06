@@ -40,7 +40,7 @@ public class World {
 
         //INITIALIZE PLATFORMS
         initializePlatform(0, 90, 90, VoxelType.GRASS);
-        initializePlatform(15, 130, 130, VoxelType.WOOD);
+        initializePlatform(18, 130, 130, VoxelType.WOOD);
         initializeItems();
     }
 

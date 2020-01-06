@@ -102,6 +102,9 @@ public class GameScreen implements Screen {
         Gdx.input.setInputProcessor(inputManager);
         Gdx.input.setCursorCatched(true);
 
+        Gdx.gl.glEnable(Gdx.gl20.GL_DEPTH_TEST);
+        Gdx.gl20.glDepthFunc(Gdx.gl20.GL_LEQUAL);
+
         /*createDebugVector(new Vector3(characterManager.getCharacterList().get(0).getBoundingBox().getCenterX(),
                 characterManager.getCharacterList().get(0).getBoundingBox().getCenterY(),
                 characterManager.getCharacterList().get(0).getBoundingBox().getCenterZ()),
@@ -176,7 +179,7 @@ public class GameScreen implements Screen {
     private void renderModels(){
         modelBatch.begin(cam);
         modelBatch.render(world.getModelInstances(), environment);
-        modelBatch.render(debugInstances, environment); //RENDER DEBUG MODELS
+        //modelBatch.render(debugInstances, environment); //RENDER DEBUG MODELS
         modelBatch.render(characterManager.getModelInstances(), environment);
         modelBatch.end();
     }

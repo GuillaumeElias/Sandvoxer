@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
+import me.guillaumeelias.sandvoxer.view.CharacterModelFactory;
 import me.guillaumeelias.sandvoxer.view.CharacterType;
 
 public class Character {
@@ -18,9 +19,7 @@ public class Character {
     public Character(Vector3 position, CharacterType type){
         this.position = position;
 
-        modelInstance = new ModelInstance(type.getModel());
-
-        modelInstance.transform.setFromEulerAngles(200,0,0).trn(position);
+        modelInstance = CharacterModelFactory.buildCharacterModelInstance(type, position);
 
         //TODO refactor that in CharacterView
         animationController = new AnimationController(modelInstance);
@@ -39,9 +38,11 @@ public class Character {
         int yi = Math.round(position.y / Voxel.CUBE_SIZE );
         int zi = Math.round(position.z / Voxel.CUBE_SIZE );
 
+        int margin = type.getVoxelMargins();
+
         //create bounding box slightly smaller than a voxel
-        this.boundingBox = new BoundingBox(new Vector3(xi * Voxel.CUBE_SIZE + 1,yi* Voxel.CUBE_SIZE + 1,zi* Voxel.CUBE_SIZE + 1),
-                new Vector3(xi * Voxel.CUBE_SIZE + Voxel.CUBE_SIZE - 1,yi* Voxel.CUBE_SIZE + Voxel.CUBE_SIZE - 1,zi* Voxel.CUBE_SIZE + Voxel.CUBE_SIZE - 1));
+        this.boundingBox = new BoundingBox(new Vector3(xi * Voxel.CUBE_SIZE + margin,yi* Voxel.CUBE_SIZE + margin,zi* Voxel.CUBE_SIZE + margin),
+                new Vector3(xi * Voxel.CUBE_SIZE + Voxel.CUBE_SIZE - margin,yi* Voxel.CUBE_SIZE + Voxel.CUBE_SIZE - margin,zi* Voxel.CUBE_SIZE + Voxel.CUBE_SIZE - margin));
     }
 
 
