@@ -18,7 +18,7 @@ import me.guillaumeelias.sandvoxer.model.Item;
 import me.guillaumeelias.sandvoxer.model.Player;
 import me.guillaumeelias.sandvoxer.model.PlayerHUD;
 import me.guillaumeelias.sandvoxer.model.World;
-import me.guillaumeelias.sandvoxer.view.VoxelModelFactory;
+import me.guillaumeelias.sandvoxer.view.CharacterManager;
 import me.guillaumeelias.sandvoxer.view.VoxelType;
 
 public class GameScreen implements Screen {
@@ -43,12 +43,12 @@ public class GameScreen implements Screen {
     Model debugModel;
     ModelInstance debugInstance;
 
-    VoxelModelFactory voxelModelFactory;
     private Sandvoxer sandvoxer;
 
     World world;
     Player player;
     PlayerHUD playerHUD;
+    CharacterManager characterManager;
 
     public GameScreen(Sandvoxer sandvoxer){
         this.sandvoxer = sandvoxer;
@@ -71,6 +71,7 @@ public class GameScreen implements Screen {
         playerHUD = new PlayerHUD();
         player = new Player(world, cam, playerHUD);
         world.setPlayer(player);
+        characterManager = new CharacterManager();
 
         //INITIALIZE MODELS
         modelBatch = new ModelBatch();
@@ -144,6 +145,7 @@ public class GameScreen implements Screen {
         modelBatch.begin(cam);
         modelBatch.render(world.getModelInstances(), environment);
         modelBatch.render(debugInstance, environment); //RENDER DEBUG MODELS
+        modelBatch.render(characterManager.getModelInstances(), environment);
         modelBatch.end();
     }
 
@@ -163,13 +165,15 @@ public class GameScreen implements Screen {
             float hudX = width - texture.getWidth() - HUD_MARGIN_RIGHT;
             spriteBatch.draw(texture, hudX, HUD_MARGIN_BOTTOM);
             font.draw(spriteBatch, selectedVoxelType.getName(), hudX + HUD_FONT_MARGIN_LEFT, HUD_MARGIN_BOTTOM + texture.getHeight() + HUD_FONT_MARGIN_BOTTOM);
-
         }
 
         spriteBatch.end();
     }
 
     public void animateModels(float deltaTime){
+
+        characterManager.updateAnimations(deltaTime);
+
         for(Item item : world.getItems()){
             item.rotate(deltaTime); //TODO migrate to item view
         }

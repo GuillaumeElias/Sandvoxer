@@ -76,7 +76,6 @@ public class Player {
         _tmp.set(UP).nor().scl(yVelocity);
         position.add(_tmp);
 
-        //if(world.isGround((int)position.x, (int)(position.y - PLAYER_HEIGHT), (int)position.z)){
         if (checkCollision()) {
             position.set(_oldPosition);
 
@@ -160,11 +159,6 @@ public class Player {
         }
 
         checkItemsCollision();
-
-        //if (world.isGround((int) position.x, (int) (position.y - PLAYER_HEIGHT), (int) position.z)) {
-        //if(checkCollision()){
-            //position.set(_oldPosition);
-        //}
     }
 
     public void moveBackward(float deltaTime){
