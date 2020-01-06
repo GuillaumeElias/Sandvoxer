@@ -12,15 +12,14 @@ public class Player {
     public static final int PLAYER_DEPTH = 7;
     public static final float NEW_BLOCK_REACH = 40f;
 
-    public static final int PLAYER_INIT_XI = 100;
-    public static final int PLAYER_INIT_ZI = 100;
+    public static final int PLAYER_INIT_XI = 91;
+    public static final int PLAYER_INIT_ZI = 91;
     public static final int PLAYER_INIT_YI = 0;
 
     private static final float MOVE_VELOCITY = 50;
     private static final float GRAVITY_VELOCITY = 0.8f;
     private static final float FALL_MAX_VELOCITY = 3f;
     private static final float JUMP_VELOCITY = 1.2f;
-    private static final float ROT_SPEED = 0.2f;
     private static final float UP_CHECK_MARGIN = 5.f;
 
     private final int Y_DEATH_LIMIT = 30;
@@ -38,9 +37,6 @@ public class Player {
     private Vector3 _tmp;
     private Vector3 _oldPosition;
 
-    private int _mouseX;
-    private int _mouseY;
-
     public Player(World world, Camera camera, PlayerHUD playerHUD) {
         this.playerHUD = playerHUD;
         this.world = world;
@@ -53,10 +49,12 @@ public class Player {
     }
 
     public void birth(){
-        this.position = new Vector3(PLAYER_INIT_XI * Voxel.CUBE_SIZE, PLAYER_INIT_YI + PLAYER_HEIGHT + 20, PLAYER_INIT_ZI * Voxel.CUBE_SIZE);
-        this.cam.lookAt(10, PLAYER_HEIGHT, 10);
-
         yVelocity = 0;
+        inAir = false;
+
+        this.position = new Vector3(PLAYER_INIT_XI * Voxel.CUBE_SIZE, PLAYER_INIT_YI + PLAYER_HEIGHT + 20, PLAYER_INIT_ZI * Voxel.CUBE_SIZE);
+        this.cam.position.set(this.position);
+        this.cam.lookAt(1000, PLAYER_INIT_YI + PLAYER_HEIGHT + 20, 1000);
     }
 
     public void gravity(float deltaTime) {
@@ -92,48 +90,6 @@ public class Player {
         }
 
         checkItemsCollision();
-    }
-
-
-
-    public void mouseMoved(int screenX, int screenY){
-        int magX = (int) Math.abs(_mouseX - screenX);
-        int magY = (int) Math.abs(_mouseY - screenY);
-
-        Vector3 oldCamDir = cam.direction.cpy();
-        Vector3 oldCamUp = cam.up.cpy();
-
-        if (_mouseX > screenX) {
-            cam.rotate(Vector3.Y, 1 * magX * ROT_SPEED);
-            cam.update();
-        }
-
-        if (_mouseX < screenX) {
-            cam.rotate(Vector3.Y, -1 * magX * ROT_SPEED);
-            cam.update();
-        }
-
-        if (_mouseY < screenY) {
-            if (cam.direction.y > -0.965)
-                cam.rotate(cam.direction.cpy().crs(Vector3.Y), -1 * magY * ROT_SPEED);
-            cam.update();
-        }
-
-        if (_mouseY > screenY) {
-
-            if (cam.direction.y < 0.965)
-                cam.rotate(cam.direction.cpy().crs(Vector3.Y), 1 * magY * ROT_SPEED);
-            cam.update();
-        }
-
-        if(cam.up.y < 0){ //if the camera was flipped, revert to old directions //TODO find more elegant solution
-            cam.up.set(oldCamUp);
-            cam.direction.set(oldCamDir);
-            cam.update();
-        }
-
-        _mouseX = screenX;
-        _mouseY = screenY;
     }
 
     public void moveForward(float deltaTime) {
@@ -256,11 +212,6 @@ public class Player {
 
     public float getZ() {
         return position.z;
-    }
-
-    public void clearMouse() {
-        _mouseX = 0;
-        _mouseY = 0;
     }
 
     public PlayerHUD getPlayerHUD() {

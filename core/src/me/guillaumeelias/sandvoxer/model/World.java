@@ -40,7 +40,7 @@ public class World {
 
         //INITIALIZE PLATFORMS
         initializePlatform(0, 90, 90, VoxelType.GRASS);
-        initializePlatform(20, 60, 120, VoxelType.WOOD);
+        initializePlatform(15, 130, 130, VoxelType.WOOD);
         initializeItems();
     }
 
@@ -57,7 +57,7 @@ public class World {
     }
 
     private void initializeItems(){
-        createNewItem(new Vector3(101 * Voxel.CUBE_SIZE, Voxel.CUBE_SIZE,Voxel.CUBE_SIZE * 101), VoxelType.SAND);
+        createNewItem(new Vector3(95 * Voxel.CUBE_SIZE, Voxel.CUBE_SIZE,Voxel.CUBE_SIZE * 95), VoxelType.SAND);
     }
 
     private void createNewItem(Vector3 position, VoxelType yieldedVoxelType){
@@ -249,6 +249,22 @@ public class World {
 
     public boolean checkBoxCollision(float x, float y, float z, int width, int height, int depth){
 
+
+        BoundingBox playerBox = buildBoundingBox(x, y, z, width, height, depth);
+
+        if(checkVoxelCollision(x,y,z,width,height,depth,playerBox) != null){
+            return true;
+        }
+
+        if(characterManager.checkCharacterCollision(playerBox) != null){
+            return true;
+        }
+
+        return false;
+    }
+
+    public Voxel checkVoxelCollision(float x, float y, float z, int width, int height, int depth, BoundingBox playerBox){
+
         int xiMin = Math.round(x / Voxel.CUBE_SIZE ) - 1;
         int yiMin = Math.round(y / Voxel.CUBE_SIZE ) - 1;
         int ziMin = Math.round(z / Voxel.CUBE_SIZE ) - 1;
@@ -256,8 +272,6 @@ public class World {
         int xiMax = Math.round((x + width) / Voxel.CUBE_SIZE ) + 1; //TODO actually if we're only using this with the player, we know how many tiles to check
         int yiMax = Math.round((y + height)/ Voxel.CUBE_SIZE ) + 1;
         int ziMax = Math.round((z + depth) / Voxel.CUBE_SIZE ) + 1;
-
-        BoundingBox playerBox = buildBoundingBox(x, y, z, width, height, depth);
 
         for (int xi = xiMin; xi < xiMax; xi += 1) {
             for (int yi = yiMin; yi < yiMax; yi += 1) {
@@ -267,18 +281,14 @@ public class World {
                     if(cube == null) continue;
 
                     if(playerBox.intersects(cube.boundingBox)){
-                        return true;
+                        return cube;
                     }
                 }
 
             }
         }
 
-        if(characterManager.checkCharacterCollision(playerBox) != null){
-            return true;
-        }
-
-        return false;
+        return null;
     }
 
     public Voxel getVoxel(float x, float y, float z) {

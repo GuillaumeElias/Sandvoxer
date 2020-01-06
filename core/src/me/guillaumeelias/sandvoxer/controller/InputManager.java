@@ -13,16 +13,21 @@ import me.guillaumeelias.sandvoxer.model.World;
 
 public class InputManager extends InputAdapter {
 
-    private final Camera camera;
+    private static final float ROT_SPEED = 0.2f;
+
+    private final Camera cam;
 
     private final Player player;
     private final World world;
     private Sandvoxer sandvoxer;
 
+    private int _mouseX;
+    private int _mouseY;
+
     private final IntIntMap keys = new IntIntMap();
 
     public InputManager (Camera camera, Player player, World world, Sandvoxer sandvoxer) {
-        this.camera = camera;
+        this.cam = camera;
         this.player = player;
         this.world = world;
         this.sandvoxer = sandvoxer;
@@ -53,7 +58,7 @@ public class InputManager extends InputAdapter {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 
-        Ray ray = camera.getPickRay(/*screenX +*/  Gdx.graphics.getWidth() / 2, /*screenY +*/  Gdx.graphics.getHeight() / 2 );
+        Ray ray = cam.getPickRay(/*screenX +*/  Gdx.graphics.getWidth() / 2, /*screenY +*/  Gdx.graphics.getHeight() / 2 );
 
         //TODO for android pick relative to mouse X and Y
 
@@ -61,7 +66,7 @@ public class InputManager extends InputAdapter {
         Vector3 rayTo = new Vector3();
 
         rayFrom.set(ray.origin);
-        rayTo.set(camera.direction);
+        rayTo.set(cam.direction);
         rayTo.nor();
 
         if(button == 1){
@@ -74,13 +79,47 @@ public class InputManager extends InputAdapter {
     }
 
     @Override
-    public boolean mouseMoved(int screenX, int screenY) {
+    public boolean mouseMoved(int screenX, int screenY){
+        int magX = Math.abs(_mouseX - screenX);
+        int magY = Math.abs(_mouseY - screenY);
 
-        player.mouseMoved(screenX, screenY);
+        Vector3 oldCamDir = cam.direction.cpy();
+        Vector3 oldCamUp = cam.up.cpy();
+
+        if (_mouseX > screenX) {
+            cam.rotate(Vector3.Y, 1 * magX * ROT_SPEED);
+            cam.update();
+        }
+
+        if (_mouseX < screenX) {
+            cam.rotate(Vector3.Y, -1 * magX * ROT_SPEED);
+            cam.update();
+        }
+
+        if (_mouseY < screenY) {
+            if (cam.direction.y > -0.965)
+                cam.rotate(cam.direction.cpy().crs(Vector3.Y), -1 * magY * ROT_SPEED);
+            cam.update();
+        }
+
+        if (_mouseY > screenY) {
+
+            if (cam.direction.y < 0.965)
+                cam.rotate(cam.direction.cpy().crs(Vector3.Y), 1 * magY * ROT_SPEED);
+            cam.update();
+        }
+
+        if(cam.up.y < 0){ //if the camera was flipped, revert to old directions //TODO find more elegant solution
+            cam.up.set(oldCamUp);
+            cam.direction.set(oldCamDir);
+            cam.update();
+        }
+
+        _mouseX = screenX;
+        _mouseY = screenY;
 
         return true;
     }
-
 
     public void update (float deltaTime) {
 
@@ -106,14 +145,15 @@ public class InputManager extends InputAdapter {
 
         refreshCameraPosition();
 
-        camera.update(true);
+        cam.update(true);
     }
 
     private void refreshCameraPosition() {
-        camera.position.set(player.getPosition());
+        cam.position.set(player.getPosition());
     }
 
     public void clearMouse() {
-        player.clearMouse();
+        _mouseX = 0;
+        _mouseY = 0;
     }
 }
