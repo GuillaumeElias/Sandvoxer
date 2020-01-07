@@ -4,8 +4,11 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import me.guillaumeelias.sandvoxer.util.Utils;
+import me.guillaumeelias.sandvoxer.view.DialogRenderer;
 
 public class Player {
+
+    private static Player instance; //TODO avoid pseudo-singletons
 
     final static Vector3 UP = Vector3.Y;
 
@@ -14,8 +17,8 @@ public class Player {
     public static final int PLAYER_DEPTH = 7;
     public static final float NEW_BLOCK_REACH = 40f;
 
-    public static final int PLAYER_INIT_XI = 91;
-    public static final int PLAYER_INIT_ZI = 91;
+    public static final int PLAYER_INIT_XI = /*TODO put back: 91*/100;
+    public static final int PLAYER_INIT_ZI = /*TODO put back: 91*/101;
     public static final int PLAYER_INIT_YI = 0;
 
     private static final float MOVE_VELOCITY = 50;
@@ -39,6 +42,8 @@ public class Player {
     private Vector3 _tmp;
     private Vector3 _oldPosition;
 
+    private Voxel _lastTouchedVoxel;
+
     public Player(World world, Camera camera, PlayerHUD playerHUD) {
         this.playerHUD = playerHUD;
         this.world = world;
@@ -48,6 +53,8 @@ public class Player {
 
         this.cam = camera;
         birth();
+
+        Player.instance = this;
     }
 
     public void birth(){
@@ -95,8 +102,6 @@ public class Player {
     }
 
     public void moveForward(float deltaTime) {
-
-
         double angleRad = getCameraAngleRad();
         _tmp.set((float) Math.sin(angleRad), 0, -(float) Math.cos(angleRad)).nor().scl(deltaTime * MOVE_VELOCITY);
 
@@ -189,9 +194,10 @@ public class Player {
 
         Voxel touchedVoxel = world.checkVoxelCollision(playerBox);
         if( touchedVoxel != null){
-            if(touchedVoxel.getTrigger() != null){
-                touchedVoxel.getTrigger().startTrigger();
-            }
+
+            checkTriggers(touchedVoxel);
+            _lastTouchedVoxel = touchedVoxel;
+
             return true;
         }
 
@@ -200,6 +206,25 @@ public class Player {
         }
 
         return false;
+    }
+
+    private void checkTriggers(Voxel touchedVoxel){
+
+        //RE-ENABLE LAST VOXEL'S TRIGGER
+        if(_lastTouchedVoxel != touchedVoxel){
+            if(_lastTouchedVoxel != null && _lastTouchedVoxel.getTrigger() != null){
+                _lastTouchedVoxel.getTrigger().reenable();
+
+                if(DialogRenderer.instance.getCurrentDialog() != null){
+                    DialogRenderer.instance.stopCurrentDialog();
+                }
+            }
+        }
+
+        //START THE TRIGGER IF THERE IS ONE ASSOCIATED WITH THIS VOXEL
+        if(touchedVoxel.getTrigger() != null){
+            touchedVoxel.getTrigger().startTrigger();
+        }
     }
 
     private void checkItemsCollision(){
@@ -237,5 +262,9 @@ public class Player {
 
     public PlayerHUD getPlayerHUD() {
         return playerHUD;
+    }
+
+    public static Player getInstance(){
+        return instance;
     }
 }

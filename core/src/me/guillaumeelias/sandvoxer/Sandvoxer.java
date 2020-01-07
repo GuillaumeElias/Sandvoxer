@@ -1,11 +1,14 @@
 package me.guillaumeelias.sandvoxer;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.graphics.Color;
 import me.guillaumeelias.sandvoxer.view.VoxelModelFactory;
 import me.guillaumeelias.sandvoxer.view.screen.GameScreen;
 import me.guillaumeelias.sandvoxer.view.screen.MenuScreen;
 
 public class Sandvoxer extends Game {
+
+	public static final Color BACKGROUND_COLOR = new Color(.1f, .12f, .16f, 1f);
 
 	GameScreen gameScreen;
 	MenuScreen menuScreen;

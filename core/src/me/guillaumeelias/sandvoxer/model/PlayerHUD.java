@@ -23,6 +23,10 @@ public class PlayerHUD {
         return voxelTypes.get(selection);
     }
 
+    public List<VoxelType> getVoxelTypes() {
+        return voxelTypes;
+    }
+
     public void addVoxelType(VoxelType yieldedVoxelType) {
         voxelTypes.add(yieldedVoxelType);
     }

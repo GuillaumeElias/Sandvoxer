@@ -8,36 +8,52 @@ public enum Dialog {
 
     CHICKEN_DIALOG_NO_SAND(new String[]{
             "Hello",
-            "You forgot to pick up the sand behind you, I think."}),
+            "You forgot to pick up the sand behind you, I think."},200),
     CHICKEN_DIALOG_1(new String[]{
             "Hello",
             "I'm just a chicken",
             "But I can tell you the meaning of this",
-            "You see the platform behing me?",
+            "You see the platform behind me?",
             "Just jump your way over there."
-    }),
+    },200),
     CHICKEN_DIALOG_REPEAT(new String[]{
             "Yeah",
             "The platform is just behind me"
-    }),
+    },200),
     WOLF_DIALOG_1(new String[]{
             "",
-            ""});
+            ""},200);
 
 
 
     private List<String> lines;
+    private int bottomMargin;
+    private boolean played;
 
-    Dialog(String [] linesArray){
+    Dialog(String [] linesArray, int bottomMargin){
+        this.bottomMargin = bottomMargin;
         lines = new ArrayList<String>();
         Collections.addAll(lines, linesArray);
+        played = false;
     }
 
-    String getLine(int lineNumber){
+    public String getLine(int lineNumber){
         return lines.get(lineNumber);
     }
 
-    int getNumberOfLines(){
+    public int getNumberOfLines(){
         return lines.size();
+    }
+
+    public int getBottomMargin() {
+        return bottomMargin;
+    }
+
+    public boolean wasPlayed() {
+        return played;
+    }
+
+    public void setPlayed(boolean played) {
+        this.played = played;
     }
 }

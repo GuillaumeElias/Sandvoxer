@@ -1,12 +1,11 @@
 package me.guillaumeelias.sandvoxer.model;
 
-import com.badlogic.gdx.Gdx;
 import me.guillaumeelias.sandvoxer.view.DialogRenderer;
 
 public class Trigger {
 
     private int id;
-    private boolean triggered;
+    private boolean enabled;
 
     private Dialog dialog;
     private Dialog dialogIfAlreadyTriggered;
@@ -16,31 +15,30 @@ public class Trigger {
         this.dialogIfAlreadyTriggered = dialogIfAlreadyTriggered;
         this.id = triggerId;
 
-        triggered = false;
+        enabled = true;
     }
 
     public void startTrigger(){
+        if(enabled == false) return;
 
-        Gdx.app.log("Trigger", "startTrigger id:"+id);
-
-        if(triggered){
-
-            switch (id){
+        if(dialog.wasPlayed()) {
+            DialogRenderer.instance.setCurrentDialog(dialogIfAlreadyTriggered);
+        }else{
+            switch (id) {
                 case 1:
-
-                    //TODO make character face player
-
-                    //TODO check if player picked up the sand
-
-                    DialogRenderer.instance.setCurrentDialog(dialog);
-
-                    break;
+                    if(Player.getInstance().getPlayerHUD().getVoxelTypes().isEmpty()){
+                        DialogRenderer.instance.setCurrentDialog(Dialog.CHICKEN_DIALOG_NO_SAND);
+                        break;
+                    }
                 default:
                     DialogRenderer.instance.setCurrentDialog(dialog);
             }
-
-        }else{
-            DialogRenderer.instance.setCurrentDialog(dialogIfAlreadyTriggered);
         }
+
+        enabled = false;
+    }
+
+    public void reenable() {
+        enabled = true;
     }
 }

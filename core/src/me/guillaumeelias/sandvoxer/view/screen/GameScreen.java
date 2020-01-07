@@ -21,6 +21,7 @@ import me.guillaumeelias.sandvoxer.model.Player;
 import me.guillaumeelias.sandvoxer.model.PlayerHUD;
 import me.guillaumeelias.sandvoxer.model.World;
 import me.guillaumeelias.sandvoxer.view.CharacterManager;
+import me.guillaumeelias.sandvoxer.view.DialogRenderer;
 import me.guillaumeelias.sandvoxer.view.VoxelType;
 
 import java.util.ArrayList;
@@ -59,6 +60,7 @@ public class GameScreen implements Screen {
         this.sandvoxer = sandvoxer;
 
         this.font = new BitmapFont(Gdx.files.internal("skin/font_pro_font_windows_20pt.fnt"), false);
+        DialogRenderer.instance.initialize(font);
 
         //INITIALIZE LIGHT
         environment = new Environment();
@@ -165,7 +167,7 @@ public class GameScreen implements Screen {
 
         //render
         renderModels();
-        renderSprites(width, height);
+        renderSprites(width, height, deltaTime);
 
         if(player.isDead()){
             inputManager.update(deltaTime);
@@ -185,8 +187,11 @@ public class GameScreen implements Screen {
     }
 
 
-    private void renderSprites(float width, int height){
+    private void renderSprites(float width, int height, float deltaTime){
         spriteBatch.begin();
+
+        //render dialog if present
+        DialogRenderer.instance.render(spriteBatch, deltaTime);
 
         //draw cursor
         spriteBatch.draw(pixmapTexture, width / 2, height / 2);

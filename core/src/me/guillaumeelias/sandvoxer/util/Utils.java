@@ -3,6 +3,7 @@ package me.guillaumeelias.sandvoxer.util;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.MathUtils;
@@ -36,5 +37,19 @@ public class Utils {
 
     public static BoundingBox buildBoundingBox(float x, float y, float z, int width, int height, int depth){
         return new BoundingBox(new Vector3(x,y,z), new Vector3(x + width, y + height, z + depth));
+    }
+
+    public static Pixmap getPixmapRoundedRectangle(int width, int height, int radius, Color color) {
+        Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
+        pixmap.setColor(color);
+
+        pixmap.fillRectangle(0, radius, pixmap.getWidth(), pixmap.getHeight()-2*radius);
+        pixmap.fillRectangle(radius, 0, pixmap.getWidth() - 2*radius, pixmap.getHeight());
+
+        pixmap.fillCircle(radius, radius, radius);
+        pixmap.fillCircle(radius, pixmap.getHeight()-radius, radius);
+        pixmap.fillCircle(pixmap.getWidth()-radius, radius, radius);
+        pixmap.fillCircle(pixmap.getWidth()-radius, pixmap.getHeight()-radius, radius);
+        return pixmap;
     }
 }
