@@ -17,8 +17,8 @@ public class Player {
     public static final int PLAYER_DEPTH = 7;
     public static final float NEW_BLOCK_REACH = 40f;
 
-    public static final int PLAYER_INIT_XI = /*TODO put back: 91*/100;
-    public static final int PLAYER_INIT_ZI = /*TODO put back: 91*/101;
+    public static final int PLAYER_INIT_XI = 91;
+    public static final int PLAYER_INIT_ZI = 91;
     public static final int PLAYER_INIT_YI = 0;
 
     private static final float MOVE_VELOCITY = 50;

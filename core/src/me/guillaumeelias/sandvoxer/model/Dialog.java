@@ -17,13 +17,18 @@ public enum Dialog {
             "Just jump your way over there."
     },200),
     CHICKEN_DIALOG_REPEAT(new String[]{
-            "Yeah",
+            "Yes",
             "The platform is just behind me"
     },200),
     WOLF_DIALOG_1(new String[]{
-            "",
-            ""},200);
-
+            "You seem like a nice person",
+            "I like your style",
+            "How about a little more bouncy?"
+    },200),
+    WOLF_DIALOG_REPEAT(new String[]{
+        "Yeah",
+        "Bounce away baby"
+    },200);
 
 
     private List<String> lines;

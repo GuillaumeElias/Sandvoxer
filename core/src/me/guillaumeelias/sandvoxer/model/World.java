@@ -64,6 +64,7 @@ public class World {
 
     private void initializeTriggers(){
         cubes[100][0][101].setTrigger(new Trigger(Dialog.CHICKEN_DIALOG_1, Dialog.CHICKEN_DIALOG_REPEAT, 1));
+        cubes[139][18][138].setTrigger(new Trigger(Dialog.WOLF_DIALOG_1, Dialog.WOLF_DIALOG_REPEAT, 2));
     }
 
     private void createNewItem(Vector3 position, VoxelType yieldedVoxelType){
