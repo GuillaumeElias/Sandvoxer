@@ -70,7 +70,7 @@ public class GameScreen implements Screen {
         //INITIALIZE CAMERA
         cam = new PerspectiveCamera(75, Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         cam.near = 1.f;
-        cam.far = 1000.f;
+        cam.far = 1200.f;
         cam.update();
 
         //INITIALIZE DATA

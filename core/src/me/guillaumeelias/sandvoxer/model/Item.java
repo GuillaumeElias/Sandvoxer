@@ -28,7 +28,7 @@ public class Item {
         this.boundingBox = new BoundingBox(this.position, this.position.cpy().add(ITEM_SIDE_LENGTH,ITEM_SIDE_LENGTH,ITEM_SIDE_LENGTH));
 
         //TODO put that in ItemView
-        this.modelInstance = new ModelInstance(VoxelModelFactory.buildModelForItem(VoxelType.SAND));
+        this.modelInstance = new ModelInstance(VoxelModelFactory.buildModelForItem(yieldedVoxelType));
         modelInstance.transform.translate(position.x, position.y, position.z);
         modelInstance.transform.rotate(Vector3.Z, 30);
         modelInstance.transform.rotate(Vector3.Y, 30);

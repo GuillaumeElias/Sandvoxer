@@ -17,6 +17,28 @@ public class PlayerHUD {
         selection = 0; //SAND
     }
 
+    public void selectionUp(){
+        if(voxelTypes.size() - 1 > selection){
+            selection++;
+        }
+    }
+
+    public void selectionDown(){
+        if(selection > 0){
+            selection--;
+        }
+    }
+
+    public void setSelection(int selection) {
+        if(selection >= 0 && selection < voxelTypes.size()){
+            this.selection = selection;
+        }
+    }
+
+    public int getSelection() {
+        return selection;
+    }
+
     public VoxelType getSelectedVoxelType(){
         if(voxelTypes.isEmpty()) return null;
 

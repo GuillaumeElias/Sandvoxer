@@ -42,6 +42,7 @@ public class World {
         //INITIALIZE PLATFORMS
         initializePlatform(0, 90, 90, VoxelType.GRASS);
         initializePlatform(18, 130, 130, VoxelType.WOOD);
+        initializePlatform(80, 30, 150, VoxelType.BLUE_STUFF);
         initializeItems();
         initializeTriggers();
     }
@@ -60,6 +61,8 @@ public class World {
 
     private void initializeItems(){
         createNewItem(new Vector3(95 * Voxel.CUBE_SIZE, Voxel.CUBE_SIZE,Voxel.CUBE_SIZE * 95), VoxelType.SAND);
+        //TODO put back createNewItem(new Vector3(135 * Voxel.CUBE_SIZE, 19 * Voxel.CUBE_SIZE,Voxel.CUBE_SIZE * 135), VoxelType.BOUNCY_STUFF);
+        createNewItem(new Vector3(94 * Voxel.CUBE_SIZE, Voxel.CUBE_SIZE,Voxel.CUBE_SIZE * 94), VoxelType.BOUNCY_STUFF);
     }
 
     private void initializeTriggers(){

@@ -9,6 +9,9 @@ public enum VoxelType {
 
     GRASS("textures/grass.png", "Grass"),
     WOOD("textures/wood.png", "Wood"),
+    BLUE_STUFF("textures/blue.png", "BlueStuff"),
+    BOUNCY_STUFF("textures/bouncy.png", "Bouncy"),
+    RED_COLOR("textures/redColor.png", "RedColor"),
     SAND("textures/sand.png", "Sand");
 
     private Model model;

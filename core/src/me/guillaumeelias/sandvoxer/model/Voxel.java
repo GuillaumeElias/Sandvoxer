@@ -47,4 +47,8 @@ public class Voxel {
     public Trigger getTrigger() {
         return trigger;
     }
+
+    public VoxelType getType() {
+        return type;
+    }
 }

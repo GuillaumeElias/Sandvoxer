@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import me.guillaumeelias.sandvoxer.util.Utils;
 import me.guillaumeelias.sandvoxer.view.DialogRenderer;
+import me.guillaumeelias.sandvoxer.view.VoxelType;
 
 public class Player {
 
@@ -25,7 +26,9 @@ public class Player {
     private static final float GRAVITY_VELOCITY = 0.8f;
     private static final float FALL_MAX_VELOCITY = 3f;
     private static final float JUMP_VELOCITY = 1.2f;
+    private static final float BOUNCE_VELOCITY = 0.8f;
     private static final float UP_CHECK_MARGIN = 5.f;
+    private static final float BOUNCY_JUMP_ALLOW_TIME_SECS = 0.2f;
 
     private final int Y_DEATH_LIMIT = 30;
 
@@ -43,6 +46,9 @@ public class Player {
     private Vector3 _oldPosition;
 
     private Voxel _lastTouchedVoxel;
+    private boolean _bounce;
+    private boolean _afterBounce;
+    private double _jumpTimer;
 
     public Player(World world, Camera camera, PlayerHUD playerHUD) {
         this.playerHUD = playerHUD;
@@ -50,6 +56,8 @@ public class Player {
 
         this._tmp = new Vector3();
         this._oldPosition = new Vector3();
+        this._bounce = false;
+        this._jumpTimer = 0;
 
         this.cam = camera;
         birth();
@@ -69,13 +77,14 @@ public class Player {
     public void gravity(float deltaTime) {
 
         if (yVelocity > 0) {
-
             if(world.checkBoxCollision(position.x, position.y + yVelocity + UP_CHECK_MARGIN, position.z, PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_DEPTH)){
                 yVelocity = 0;
-                //TODO set to minus something if bouncy material
+                _afterBounce = false;
             }
 
             yVelocity -= GRAVITY_VELOCITY * deltaTime;
+
+            _jumpTimer+=deltaTime;
         }
 
         _oldPosition.set(position);
@@ -83,12 +92,19 @@ public class Player {
         _tmp.set(UP).nor().scl(yVelocity);
         position.add(_tmp);
 
-        if (checkCollision()) {
+        if (checkCollision(true)) {
             position.set(_oldPosition);
 
             inAir = false;
-            //TODO if bouncy material => yVelocity++;
+            if(_bounce){
+                yVelocity = BOUNCE_VELOCITY;
+                _bounce = false;
+                _afterBounce = true;
+            }else {
+                _afterBounce = false;
+            }
 
+            _jumpTimer = 0;
         } else {
             inAir = true;
             if (yVelocity == 0) {
@@ -109,7 +125,7 @@ public class Player {
         _oldPosition.set(position);
 
         position.sub(_tmp.x,0,0);
-        if(checkCollision()){
+        if(checkCollision(false)){
             position.set(_oldPosition);
         }
 
@@ -117,7 +133,7 @@ public class Player {
         _oldPosition.set(position);
 
         position.sub(0,0,_tmp.z);
-        if(checkCollision()){
+        if(checkCollision(false)){
             position.set(_oldPosition);
         }
 
@@ -132,7 +148,7 @@ public class Player {
         _oldPosition.set(position);
 
         position.add(_tmp.x,0,0);
-        if(checkCollision()){
+        if(checkCollision(false)){
             position.set(_oldPosition);
         }
 
@@ -140,7 +156,7 @@ public class Player {
         _oldPosition.set(position);
 
         position.add(0,0,_tmp.z);
-        if(checkCollision()){
+        if(checkCollision(false)){
             position.set(_oldPosition);
         }
 
@@ -150,6 +166,9 @@ public class Player {
     public void jump(float deltaTime) {
         if(!inAir){
             yVelocity = JUMP_VELOCITY;
+        }else if(_afterBounce && _jumpTimer < BOUNCY_JUMP_ALLOW_TIME_SECS){
+            yVelocity =+ JUMP_VELOCITY + BOUNCE_VELOCITY;
+            _afterBounce = false;
         }
     }
 
@@ -160,7 +179,7 @@ public class Player {
 
         position.add(_tmp);
 
-        if(checkCollision()){
+        if(checkCollision(false)){
             position.set(_oldPosition);
         }
 
@@ -173,7 +192,7 @@ public class Player {
 
         position.add(_tmp);
 
-        if(checkCollision()){
+        if(checkCollision(false)){
             position.set(_oldPosition);
         }
 
@@ -188,7 +207,7 @@ public class Player {
         return false;
     }
 
-    private boolean checkCollision(){
+    private boolean checkCollision(boolean checkMaterial){
 
         BoundingBox playerBox = calculateBoundingBox();
 
@@ -197,6 +216,10 @@ public class Player {
 
             checkTriggers(touchedVoxel);
             _lastTouchedVoxel = touchedVoxel;
+
+            if(checkMaterial && touchedVoxel.getType() == VoxelType.BOUNCY_STUFF){
+                _bounce = true;
+            }
 
             return true;
         }

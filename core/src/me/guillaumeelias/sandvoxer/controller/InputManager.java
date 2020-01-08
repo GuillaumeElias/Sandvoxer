@@ -36,6 +36,13 @@ public class InputManager extends InputAdapter {
     @Override
     public boolean keyDown (int keycode) {
         keys.put(keycode, keycode);
+
+        if(keycode == Keys.NUM_1){
+            player.getPlayerHUD().setSelection(0);
+        }else if(keycode == Keys.NUM_2){
+            player.getPlayerHUD().setSelection(1);
+        }
+
         return true;
     }
 
@@ -74,6 +81,15 @@ public class InputManager extends InputAdapter {
         }else {
             world.onClickBlock(rayFrom, rayTo);
         }
+
+        return true;
+    }
+
+
+    @Override
+    public boolean scrolled(int amount) {
+
+        player.getPlayerHUD().setSelection( player.getPlayerHUD().getSelection() + amount);
 
         return true;
     }
