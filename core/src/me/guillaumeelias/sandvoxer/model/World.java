@@ -27,7 +27,8 @@ public class World {
     private List<ModelInstance> modelInstances;
     private CharacterManager characterManager;
 
-    public World(){
+    public World(Player player){
+        this.player = player;
         this.currentLevel = 0;
         this.modelInstances = new ArrayList<>(WORLD_SIDE_LENGTH*WORLD_SIDE_LENGTH);
         this.items = new ArrayList<>();
@@ -45,7 +46,7 @@ public class World {
         this.modelInstances.clear();
         this.items.clear();
 
-        cubes = LevelGenerator.initializeLevel(currentLevel, items);
+        cubes = LevelGenerator.initializeLevel(currentLevel, items, player.getPlayerHUD());
         populateModelInstancesFromLevel();
         characterManager.initializeCharactersForLevel(currentLevel);
     }
@@ -150,6 +151,8 @@ public class World {
         VoxelType voxelTypeSelected = player.getPlayerHUD().getSelectedVoxelType();
         if(voxelTypeSelected == null) {
             return;
+        }else if(player.getPlayerHUD().infiniteMaterials == false && player.getPlayerHUD().canPlaceVoxelType(voxelTypeSelected) == false){
+            return;
         }
 
         //CHECK IF PLAYER IS AT SAME POSITION
@@ -164,6 +167,8 @@ public class World {
     private void placeBlock(int xi, int yi, int zi, VoxelType voxelType){
         cubes[xi][yi][zi] = new Voxel(xi, yi, zi, voxelType);
         modelInstances.add(cubes[xi][yi][zi].modelInstance);
+
+        player.getPlayerHUD().decrementVoxelTypeQuantity(voxelType);
     }
 
     public void restoreSpawnBlockIfDestructed(){
@@ -312,10 +317,6 @@ public class World {
 
     public List<Item> getItems() {
         return items;
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
     }
 
     public Item checkItemCollision(float x, float y, float z, int width, int height, int depth){

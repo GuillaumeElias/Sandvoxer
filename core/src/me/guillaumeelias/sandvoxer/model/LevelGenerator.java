@@ -11,12 +11,14 @@ public class LevelGenerator {
 
     public static final int PLATFORM_SIZE = 20;
 
-    public static Voxel[][][] initializeLevel(int level, List<Item> itemList){
+    public static Voxel[][][] initializeLevel(int level, List<Item> itemList, PlayerHUD playerHUD){
 
         Voxel[][][] cubes = new Voxel[World.WORLD_SIDE_LENGTH][World.WORLD_SIDE_LENGTH][World.WORLD_SIDE_LENGTH];
 
         switch (level) {
             case 0:
+                playerHUD.setInfiniteMaterials(true);
+
                 //INITIALIZE PLATFORMS
                 createPlatform(0, 90, 90, VoxelType.GRASS, cubes);
                 createPlatform(18, 130, 130, VoxelType.WOOD, cubes);
@@ -36,6 +38,11 @@ public class LevelGenerator {
 
                 break;
             case 1:
+
+                playerHUD.setInfiniteMaterials(false);
+                playerHUD.setVoxelTypeQuantity(VoxelType.SAND,3);
+                playerHUD.setVoxelTypeQuantity(VoxelType.BOUNCY_STUFF,2);
+
                 //INITIALIZE PLATFORMS
                 createPlatform(0, 90, 90, VoxelType.WOOD, cubes);
                 createPlatform(8, 110, 110, VoxelType.GRASS_2, cubes);

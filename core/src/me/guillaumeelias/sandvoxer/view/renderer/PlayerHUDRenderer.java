@@ -49,6 +49,9 @@ public class PlayerHUDRenderer {
             float hudX = width - texture.getWidth() - HUD_MARGINS;
             spriteBatch.draw(texture, hudX, HUD_MARGINS);
             font.draw(spriteBatch, selectedVoxelType.getName(), hudX + HUD_FONT_PADDING_LEFT, HUD_MARGINS + texture.getHeight() + HUD_FONT_PADDING_BOTTOM);
+
+            //draw quantity left
+            //TODO
         }
 
         //DRAW LEVEL NUMBER

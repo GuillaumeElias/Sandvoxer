@@ -4,8 +4,8 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import me.guillaumeelias.sandvoxer.util.Utils;
-import me.guillaumeelias.sandvoxer.view.renderer.DialogRenderer;
 import me.guillaumeelias.sandvoxer.view.VoxelType;
+import me.guillaumeelias.sandvoxer.view.renderer.DialogRenderer;
 
 public class Player {
 
@@ -50,8 +50,7 @@ public class Player {
     private boolean _afterBounce;
     private double _jumpTimer;
 
-    public Player(World world, Camera camera) {
-        this.world = world;
+    public Player(Camera camera) {
 
         this.playerHUD = new PlayerHUD();
 
@@ -286,6 +285,10 @@ public class Player {
 
     public PlayerHUD getPlayerHUD() {
         return playerHUD;
+    }
+
+    public void setWorld(World world) {
+        this.world = world;
     }
 
     public static Player getInstance(){

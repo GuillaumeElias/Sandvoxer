@@ -71,9 +71,9 @@ public class GameScreen implements Screen {
         cam.update();
 
         //INITIALIZE DATA
-        world = new World();
-        player = new Player(world, cam);
-        world.setPlayer(player);
+        player = new Player(cam);
+        world = new World(player);
+        player.setWorld(world);
         characterManager = world.getCharacterManager();
         playerHUDRenderer = new PlayerHUDRenderer(player.getPlayerHUD(), world, font);
 
