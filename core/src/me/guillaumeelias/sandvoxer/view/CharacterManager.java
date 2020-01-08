@@ -19,6 +19,7 @@ public class CharacterManager {
 
         createCharacter(new Vector3(1010,5,1020), CharacterType.CHICKEN);
         createCharacter(new Vector3(1400,185,1400), CharacterType.WOLF);
+        //createCharacter(new Vector3(1012,5,1020), CharacterType.PARTICLES);
     }
 
     public void createCharacter(Vector3 position, CharacterType characterType){

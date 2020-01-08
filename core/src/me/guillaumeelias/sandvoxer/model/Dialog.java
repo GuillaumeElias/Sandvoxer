@@ -23,11 +23,14 @@ public enum Dialog {
     WOLF_DIALOG_1(new String[]{
             "You seem like a nice person",
             "I like your style",
-            "How about a little more bouncy?"
+            "How about a little more bouncy?",
+            "Scroll down or press the number 2 to select another material",
+            "Then try to reach the blue platform up there"
     },200),
     WOLF_DIALOG_REPEAT(new String[]{
         "Yeah",
-        "Bounce away baby"
+        "Bounce away baby",
+        "Scroll or press 2 and reach the blue platform"
     },200);
 
 

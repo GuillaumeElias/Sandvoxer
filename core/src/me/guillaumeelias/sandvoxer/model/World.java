@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
+import me.guillaumeelias.sandvoxer.model.trigger.DialogTrigger;
+import me.guillaumeelias.sandvoxer.model.trigger.EndLevelTrigger;
 import me.guillaumeelias.sandvoxer.util.Utils;
 import me.guillaumeelias.sandvoxer.view.CharacterManager;
 import me.guillaumeelias.sandvoxer.view.VoxelType;
@@ -43,6 +45,8 @@ public class World {
         initializePlatform(0, 90, 90, VoxelType.GRASS);
         initializePlatform(18, 130, 130, VoxelType.WOOD);
         initializePlatform(80, 30, 150, VoxelType.BLUE_STUFF);
+        placeBlock(40,81,160, VoxelType.RED_COLOR);
+
         initializeItems();
         initializeTriggers();
     }
@@ -50,24 +54,20 @@ public class World {
     private void initializePlatform(int yi, int posXi, int posZi, VoxelType voxelType){
         for (int xi = posXi; xi < posXi + PLATFORM_SIZE; xi += 1) {
             for (int zi = posZi; zi < posZi + PLATFORM_SIZE; zi += 1) {
-                ModelInstance modelInstance = new ModelInstance(voxelType.getModel());
-                modelInstance.transform.translate(xi * Voxel.CUBE_SIZE, yi * Voxel.CUBE_SIZE, zi * Voxel.CUBE_SIZE);
-
-                cubes[xi][yi][zi] = new Voxel(xi, yi, zi, modelInstance, voxelType);
-                modelInstances.add(modelInstance);
+                placeBlock(xi,yi,zi, voxelType);
             }
         }
     }
 
     private void initializeItems(){
         createNewItem(new Vector3(95 * Voxel.CUBE_SIZE, Voxel.CUBE_SIZE,Voxel.CUBE_SIZE * 95), VoxelType.SAND);
-        //TODO put back createNewItem(new Vector3(135 * Voxel.CUBE_SIZE, 19 * Voxel.CUBE_SIZE,Voxel.CUBE_SIZE * 135), VoxelType.BOUNCY_STUFF);
-        createNewItem(new Vector3(94 * Voxel.CUBE_SIZE, Voxel.CUBE_SIZE,Voxel.CUBE_SIZE * 94), VoxelType.BOUNCY_STUFF);
+        createNewItem(new Vector3(135 * Voxel.CUBE_SIZE, 19 * Voxel.CUBE_SIZE,Voxel.CUBE_SIZE * 135), VoxelType.BOUNCY_STUFF);
     }
 
     private void initializeTriggers(){
-        cubes[100][0][101].setTrigger(new Trigger(Dialog.CHICKEN_DIALOG_1, Dialog.CHICKEN_DIALOG_REPEAT, 1));
-        cubes[139][18][138].setTrigger(new Trigger(Dialog.WOLF_DIALOG_1, Dialog.WOLF_DIALOG_REPEAT, 2));
+        cubes[100][0][101].setTrigger(new DialogTrigger(Dialog.CHICKEN_DIALOG_1, Dialog.CHICKEN_DIALOG_REPEAT, 1));
+        cubes[139][18][138].setTrigger(new DialogTrigger(Dialog.WOLF_DIALOG_1, Dialog.WOLF_DIALOG_REPEAT, 2));
+        cubes[40][81][160].setTrigger(new EndLevelTrigger(3));
     }
 
     private void createNewItem(Vector3 position, VoxelType yieldedVoxelType){
