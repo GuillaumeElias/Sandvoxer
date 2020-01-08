@@ -29,7 +29,7 @@ public class DialogRenderer{
     private int currentNbOfLetters;
     private Texture background;
 
-    private final int dialogWidth;
+    private int dialogWidth;
     private float fontHeight;
     private float marginYTextWithinBackground;
 
@@ -39,8 +39,6 @@ public class DialogRenderer{
     private DialogRenderer(){
         currentDialog = null;
         currentLine = -1;
-
-        this.dialogWidth = Gdx.graphics.getWidth() - TEXT_BACKGROUND_MARGINS * 2;
     }
 
     public void initialize(BitmapFont font){
@@ -51,6 +49,7 @@ public class DialogRenderer{
         Gdx.app.log("font", "font height"+fontHeight);
         this.marginYTextWithinBackground = (TEXT_BACKGROUND_HEIGHT - fontHeight) / 2;
 
+        this.dialogWidth = Gdx.graphics.getWidth() - TEXT_BACKGROUND_MARGINS * 2;
 
         background = createBackground();
     }

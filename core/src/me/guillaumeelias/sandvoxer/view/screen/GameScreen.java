@@ -188,6 +188,7 @@ public class GameScreen implements Screen {
 
 
     private void renderSprites(float width, int height, float deltaTime){
+
         spriteBatch.begin();
 
         //render dialog if present
@@ -221,7 +222,16 @@ public class GameScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
+        if(cam.viewportWidth != width || cam.viewportHeight != height){
+            cam.viewportWidth = width;
+            cam.viewportHeight = height;
 
+            spriteBatch = new SpriteBatch(); //re-create projection matrix of the sprites
+
+            DialogRenderer.instance.initialize(font); //make dialog renderer aware of width change
+
+            cam.update();
+        }
     }
 
     @Override
@@ -230,7 +240,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void resume() {
-
+        Gdx.app.log("resume", "");
     }
 
     @Override

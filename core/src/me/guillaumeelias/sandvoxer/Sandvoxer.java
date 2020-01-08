@@ -1,6 +1,7 @@
 package me.guillaumeelias.sandvoxer;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import me.guillaumeelias.sandvoxer.view.VoxelModelFactory;
 import me.guillaumeelias.sandvoxer.view.screen.GameScreen;
@@ -23,6 +24,7 @@ public class Sandvoxer extends Game {
 
 	public void switchToGameScreen(){
 		this.setScreen(gameScreen);
+		gameScreen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	public void switchToMenuScreen(){

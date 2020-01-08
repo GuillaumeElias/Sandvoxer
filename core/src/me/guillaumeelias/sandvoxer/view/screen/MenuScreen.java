@@ -111,7 +111,10 @@ public class MenuScreen extends InputListener implements Screen {
 
     @Override
     public void resize(int width, int height) {
+        camera.viewportWidth = width;
+        camera.viewportHeight = height;
 
+        show();
     }
 
     @Override
