@@ -16,10 +16,21 @@ public class CharacterManager {
     public CharacterManager(){
         characterList = new ArrayList<>();
         modelInstances = new ArrayList<>();
+    }
 
-        createCharacter(new Vector3(1010,5,1020), CharacterType.CHICKEN);
-        createCharacter(new Vector3(1400,185,1400), CharacterType.WOLF);
-        //createCharacter(new Vector3(1012,5,1020), CharacterType.PARTICLES);
+    public void initializeCharactersForLevel(int level){
+        characterList.clear();
+        modelInstances.clear();
+
+        switch (level) {
+            case 0:
+                createCharacter(new Vector3(1010,5,1020), CharacterType.CHICKEN);
+                createCharacter(new Vector3(1400,185,1400), CharacterType.WOLF);
+                //createCharacter(new Vector3(1012,5,1020), CharacterType.PARTICLES);
+            case 1:
+                //TODO
+        }
+
     }
 
     public void createCharacter(Vector3 position, CharacterType characterType){

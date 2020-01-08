@@ -4,12 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
-import me.guillaumeelias.sandvoxer.model.trigger.DialogTrigger;
-import me.guillaumeelias.sandvoxer.model.trigger.EndLevelTrigger;
 import me.guillaumeelias.sandvoxer.util.Utils;
 import me.guillaumeelias.sandvoxer.view.CharacterManager;
 import me.guillaumeelias.sandvoxer.view.VoxelType;
-import me.guillaumeelias.sandvoxer.view.screen.GameScreen;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,58 +19,55 @@ public class World {
     public static final int GRID_SIZE = 200;
     public static final int WORLD_SIDE_LENGTH = GRID_SIZE;
 
-    public static final int PLATFORM_SIZE = 20;
-
     private Voxel cubes[][][];
     private Player player;
     private List<Item> items;
+    private int currentLevel;
 
     private List<ModelInstance> modelInstances;
     private CharacterManager characterManager;
 
-    private GameScreen gameScreen;
-
-    public World(CharacterManager characterManager, GameScreen gameScreen){
-        this.gameScreen = gameScreen;
-        this.characterManager = characterManager;
+    public World(){
+        this.currentLevel = 0;
         this.modelInstances = new ArrayList<>(WORLD_SIDE_LENGTH*WORLD_SIDE_LENGTH);
         this.items = new ArrayList<>();
+        this.characterManager = new CharacterManager();
 
-        cubes = new Voxel[WORLD_SIDE_LENGTH][WORLD_SIDE_LENGTH][WORLD_SIDE_LENGTH];
-
-        //INITIALIZE PLATFORMS
-        initializePlatform(0, 90, 90, VoxelType.GRASS);
-        initializePlatform(18, 130, 130, VoxelType.WOOD);
-        initializePlatform(80, 30, 150, VoxelType.BLUE_STUFF);
-        placeBlock(40,81,160, VoxelType.RED_COLOR);
-
-        initializeItems();
-        initializeTriggers();
+        startLevel();
     }
 
-    private void initializePlatform(int yi, int posXi, int posZi, VoxelType voxelType){
-        for (int xi = posXi; xi < posXi + PLATFORM_SIZE; xi += 1) {
-            for (int zi = posZi; zi < posZi + PLATFORM_SIZE; zi += 1) {
-                placeBlock(xi,yi,zi, voxelType);
+    public void startNextLevel(){
+        currentLevel++;
+        startLevel();
+    }
+
+    private void startLevel(){
+        this.modelInstances.clear();
+        this.items.clear();
+
+        cubes = LevelGenerator.initializeLevel(currentLevel, items);
+        populateModelInstancesFromLevel();
+        characterManager.initializeCharactersForLevel(currentLevel);
+    }
+
+    public void populateModelInstancesFromLevel(){ //TODO move elsewhere
+
+        //parse all cubes
+        for (int xi = 0; xi < GRID_SIZE; xi += 1) {
+            for (int yi = 0; yi < GRID_SIZE; yi += 1) {
+                for (int zi = 0; zi < GRID_SIZE; zi += 1) {
+                    Voxel cube = cubes[xi][yi][zi];
+                    if(cube != null){
+                        modelInstances.add(cube.modelInstance);
+                    }
+                }
             }
         }
-    }
 
-    private void initializeItems(){
-        createNewItem(new Vector3(95 * Voxel.CUBE_SIZE, Voxel.CUBE_SIZE,Voxel.CUBE_SIZE * 95), VoxelType.SAND);
-        createNewItem(new Vector3(135 * Voxel.CUBE_SIZE, 19 * Voxel.CUBE_SIZE,Voxel.CUBE_SIZE * 135), VoxelType.BOUNCY_STUFF);
-    }
-
-    private void initializeTriggers(){
-        cubes[100][0][101].setTrigger(new DialogTrigger(Dialog.CHICKEN_DIALOG_1, Dialog.CHICKEN_DIALOG_REPEAT, 1));
-        cubes[139][18][138].setTrigger(new DialogTrigger(Dialog.WOLF_DIALOG_1, Dialog.WOLF_DIALOG_REPEAT, 2));
-        cubes[40][81][160].setTrigger(new EndLevelTrigger(3));
-    }
-
-    private void createNewItem(Vector3 position, VoxelType yieldedVoxelType){
-        Item item = new Item(position, yieldedVoxelType);
-        items.add(item);
-        modelInstances.add(item.getModelInstance());
+        //parse item
+        for(Item item : items){
+            this.modelInstances.add(item.getModelInstance());
+        }
     }
 
     public void onClickBlock(Vector3 rayFrom, Vector3 rayTo){
@@ -168,11 +162,8 @@ public class World {
     }
 
     private void placeBlock(int xi, int yi, int zi, VoxelType voxelType){
-        ModelInstance modelInstance = new ModelInstance(voxelType.getModel());
-        modelInstance.transform.translate(xi * Voxel.CUBE_SIZE,yi * Voxel.CUBE_SIZE,zi * Voxel.CUBE_SIZE);
-
-        cubes[xi][yi][zi] = new Voxel(xi, yi, zi, modelInstance, voxelType);
-        modelInstances.add(modelInstance);
+        cubes[xi][yi][zi] = new Voxel(xi, yi, zi, voxelType);
+        modelInstances.add(cubes[xi][yi][zi].modelInstance);
     }
 
     public void restoreSpawnBlockIfDestructed(){

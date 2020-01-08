@@ -20,16 +20,18 @@ public class Voxel {
 
     Trigger trigger;
 
-    public Voxel(int xi, int yi, int zi, ModelInstance modelInstance, VoxelType voxelType){
+    public Voxel(int xi, int yi, int zi, VoxelType voxelType){
         this.xi = xi;
         this.yi = yi;
         this.zi = zi;
 
-        this.modelInstance = modelInstance;
         this.type = voxelType;
 
         Vector3 worldPosition = new Vector3(xi * CUBE_SIZE, yi * CUBE_SIZE, zi * CUBE_SIZE);
         this.boundingBox = new BoundingBox(worldPosition, new Vector3(worldPosition).add(CUBE_SIZE, CUBE_SIZE, CUBE_SIZE));
+
+        modelInstance = new ModelInstance(voxelType.getModel());
+        modelInstance.transform.translate(xi * Voxel.CUBE_SIZE,yi * Voxel.CUBE_SIZE,zi * Voxel.CUBE_SIZE);
     }
 
     public ModelInstance getModelInstance() {

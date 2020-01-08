@@ -34,6 +34,7 @@ public class GameScreen implements Screen {
     public static final int HUD_FONT_MARGIN_BOTTOM = 30;
     public static final int HUD_FONT_MARGIN_LEFT = 3;
 
+    private static GameScreen instance; //TODO avoid pseudo-singletons
 
     private Environment environment;
     private PerspectiveCamera cam;
@@ -57,6 +58,7 @@ public class GameScreen implements Screen {
     CharacterManager characterManager;
 
     public GameScreen(Sandvoxer sandvoxer){
+        instance = this;
         this.sandvoxer = sandvoxer;
 
         this.font = new BitmapFont(Gdx.files.internal("skin/font_pro_font_windows_20pt.fnt"), false);
@@ -74,11 +76,11 @@ public class GameScreen implements Screen {
         cam.update();
 
         //INITIALIZE DATA
-        characterManager = new CharacterManager();
-        world = new World(characterManager, this);
+        world = new World();
         playerHUD = new PlayerHUD();
         player = new Player(world, cam, playerHUD);
         world.setPlayer(player);
+        characterManager = world.getCharacterManager();
 
         //INITIALIZE MODELS
         modelBatch = new ModelBatch();
@@ -170,12 +172,19 @@ public class GameScreen implements Screen {
         renderSprites(width, height, deltaTime);
 
         if(player.isDead()){
-            inputManager.update(deltaTime);
-            player.birth();
-            cam.up.set(Vector3.Y);
+            initPlayer();
             world.restoreSpawnBlockIfDestructed();
-            //TODO show message
         }
+    }
+
+    public void startNextLevel(){
+        world.startNextLevel();
+        initPlayer();
+    }
+
+    public void initPlayer(){
+        player.birth();
+        cam.up.set(Vector3.Y);
     }
 
     private void renderModels(){
@@ -252,5 +261,9 @@ public class GameScreen implements Screen {
     public void dispose () {
         modelBatch.dispose();
         pixmap.dispose();
+    }
+
+    public static GameScreen getInstance() {
+        return instance;
     }
 }

@@ -62,6 +62,7 @@ public class MenuScreen extends InputListener implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y){
                 MenuScreen.this.sandvoxer.switchToGameScreen();
+                firstTimeShowing = false;
             }
         });
 
@@ -96,8 +97,6 @@ public class MenuScreen extends InputListener implements Screen {
         Gdx.input.setInputProcessor(stage);
         Gdx.input.setCursorCatched(false);
         stage.addListener(this);
-
-        firstTimeShowing = false;
     }
 
     @Override
