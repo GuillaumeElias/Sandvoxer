@@ -339,6 +339,10 @@ public class World {
         return characterManager;
     }
 
+    public int getCurrentLevel() {
+        return currentLevel;
+    }
+
     private static class HitVoxel {
         Voxel voxel;
         Vector3 incisionPoint;

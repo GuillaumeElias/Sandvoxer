@@ -2,7 +2,10 @@ package me.guillaumeelias.sandvoxer.view.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.*;
@@ -18,21 +21,15 @@ import me.guillaumeelias.sandvoxer.Sandvoxer;
 import me.guillaumeelias.sandvoxer.controller.InputManager;
 import me.guillaumeelias.sandvoxer.model.Item;
 import me.guillaumeelias.sandvoxer.model.Player;
-import me.guillaumeelias.sandvoxer.model.PlayerHUD;
 import me.guillaumeelias.sandvoxer.model.World;
 import me.guillaumeelias.sandvoxer.view.CharacterManager;
-import me.guillaumeelias.sandvoxer.view.DialogRenderer;
-import me.guillaumeelias.sandvoxer.view.VoxelType;
+import me.guillaumeelias.sandvoxer.view.renderer.DialogRenderer;
+import me.guillaumeelias.sandvoxer.view.renderer.PlayerHUDRenderer;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameScreen implements Screen {
-
-    public static final int HUD_MARGIN_RIGHT = 20;
-    public static final int HUD_MARGIN_BOTTOM = 20;
-    public static final int HUD_FONT_MARGIN_BOTTOM = 30;
-    public static final int HUD_FONT_MARGIN_LEFT = 3;
 
     private static GameScreen instance; //TODO avoid pseudo-singletons
 
@@ -44,8 +41,6 @@ public class GameScreen implements Screen {
     private BitmapFont font;
 
     public InputManager inputManager;
-    Pixmap pixmap;
-    Texture pixmapTexture;
 
     //List<Model> debugModels;
     List<ModelInstance> debugInstances = new ArrayList<>();
@@ -54,7 +49,7 @@ public class GameScreen implements Screen {
 
     World world;
     Player player;
-    PlayerHUD playerHUD;
+    PlayerHUDRenderer playerHUDRenderer;
     CharacterManager characterManager;
 
     public GameScreen(Sandvoxer sandvoxer){
@@ -77,10 +72,10 @@ public class GameScreen implements Screen {
 
         //INITIALIZE DATA
         world = new World();
-        playerHUD = new PlayerHUD();
-        player = new Player(world, cam, playerHUD);
+        player = new Player(world, cam);
         world.setPlayer(player);
         characterManager = world.getCharacterManager();
+        playerHUDRenderer = new PlayerHUDRenderer(player.getPlayerHUD(), world, font);
 
         //INITIALIZE MODELS
         modelBatch = new ModelBatch();
@@ -91,11 +86,7 @@ public class GameScreen implements Screen {
         spriteBatch = new SpriteBatch();
 
         //INITIALIZE SPRITES
-        //cursor
-        pixmap = new Pixmap(4, 4, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.WHITE);
-        pixmap.fillRectangle(0, 0, 4, 4);
-        pixmapTexture = new Texture(pixmap, Pixmap.Format.RGB888, false);
+        playerHUDRenderer.initialize();
     }
 
     @Override
@@ -203,19 +194,8 @@ public class GameScreen implements Screen {
         //render dialog if present
         DialogRenderer.instance.render(spriteBatch, deltaTime);
 
-        //draw cursor
-        spriteBatch.draw(pixmapTexture, width / 2, height / 2);
-
-        //draw selected voxel type
-        VoxelType selectedVoxelType = playerHUD.getSelectedVoxelType();
-
-        if(selectedVoxelType != null){
-            Texture texture = selectedVoxelType.getTexture();
-
-            float hudX = width - texture.getWidth() - HUD_MARGIN_RIGHT;
-            spriteBatch.draw(texture, hudX, HUD_MARGIN_BOTTOM);
-            font.draw(spriteBatch, selectedVoxelType.getName(), hudX + HUD_FONT_MARGIN_LEFT, HUD_MARGIN_BOTTOM + texture.getHeight() + HUD_FONT_MARGIN_BOTTOM);
-        }
+        //render Player HUD
+        playerHUDRenderer.render(spriteBatch, width, height);
 
         spriteBatch.end();
     }
@@ -260,7 +240,7 @@ public class GameScreen implements Screen {
     @Override
     public void dispose () {
         modelBatch.dispose();
-        pixmap.dispose();
+        playerHUDRenderer.dispose();
     }
 
     public static GameScreen getInstance() {

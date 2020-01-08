@@ -1,4 +1,4 @@
-package me.guillaumeelias.sandvoxer.view;
+package me.guillaumeelias.sandvoxer.view.renderer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;

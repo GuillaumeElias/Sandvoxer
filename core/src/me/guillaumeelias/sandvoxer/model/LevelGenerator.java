@@ -32,14 +32,14 @@ public class LevelGenerator {
                 //ADD TRIGGERS
                 cubes[100][0][101].setTrigger(new DialogTrigger(Dialog.CHICKEN_DIALOG_1, Dialog.CHICKEN_DIALOG_REPEAT, 1));
                 cubes[139][18][138].setTrigger(new DialogTrigger(Dialog.WOLF_DIALOG_1, Dialog.WOLF_DIALOG_REPEAT, 2));
-                /*cubes[40][81][160]*/cubes[100][0][102].setTrigger(new EndLevelTrigger(3));
+                /*TODO put back cubes[40][81][160]*/cubes[100][0][102].setTrigger(new EndLevelTrigger(3));
 
                 break;
             case 1:
                 //INITIALIZE PLATFORMS
                 createPlatform(0, 90, 90, VoxelType.WOOD, cubes);
-                createPlatform(18, 130, 130, VoxelType.BLUE_STUFF, cubes);
-                createPlatform(80, 30, 150, VoxelType.GRASS, cubes);
+                createPlatform(8, 110, 110, VoxelType.GRASS_2, cubes);
+                createPlatform(80, 30, 150, VoxelType.BLUE_STUFF, cubes);
 
                 //ADD AD-HOC BLOCKS
                 //TODO

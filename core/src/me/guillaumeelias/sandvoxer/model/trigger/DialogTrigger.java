@@ -2,8 +2,7 @@ package me.guillaumeelias.sandvoxer.model.trigger;
 
 import me.guillaumeelias.sandvoxer.model.Dialog;
 import me.guillaumeelias.sandvoxer.model.Player;
-import me.guillaumeelias.sandvoxer.model.Trigger;
-import me.guillaumeelias.sandvoxer.view.DialogRenderer;
+import me.guillaumeelias.sandvoxer.view.renderer.DialogRenderer;
 
 public class DialogTrigger extends Trigger {
 

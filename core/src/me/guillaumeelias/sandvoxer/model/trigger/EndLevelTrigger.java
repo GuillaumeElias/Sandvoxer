@@ -1,7 +1,6 @@
 package me.guillaumeelias.sandvoxer.model.trigger;
 
 import com.badlogic.gdx.Gdx;
-import me.guillaumeelias.sandvoxer.model.Trigger;
 import me.guillaumeelias.sandvoxer.view.screen.GameScreen;
 
 public class EndLevelTrigger extends Trigger {

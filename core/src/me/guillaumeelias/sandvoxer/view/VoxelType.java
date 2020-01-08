@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 public enum VoxelType {
 
     GRASS("textures/grass.png", "Grass"),
+    GRASS_2("textures/grass2.png", "Grass2"),
     WOOD("textures/wood.png", "Wood"),
     BLUE_STUFF("textures/blue.png", "BlueStuff"),
     BOUNCY_STUFF("textures/bouncy.png", "Bouncy"),

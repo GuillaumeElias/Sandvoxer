@@ -1,4 +1,4 @@
-package me.guillaumeelias.sandvoxer.model;
+package me.guillaumeelias.sandvoxer.model.trigger;
 
 public abstract class Trigger {
 
