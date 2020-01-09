@@ -3,6 +3,7 @@ package me.guillaumeelias.sandvoxer;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import me.guillaumeelias.sandvoxer.sound.SoundController;
 import me.guillaumeelias.sandvoxer.view.VoxelModelFactory;
 import me.guillaumeelias.sandvoxer.view.screen.GameScreen;
 import me.guillaumeelias.sandvoxer.view.screen.MenuScreen;
@@ -20,20 +21,25 @@ public class Sandvoxer extends Game {
 		menuScreen = new MenuScreen(this);
 
 		this.setScreen(menuScreen);
+
+		SoundController.initialize();
 	}
 
 	public void switchToGameScreen(){
 		this.setScreen(gameScreen);
 		gameScreen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		SoundController.startMusic();
 	}
 
 	public void switchToMenuScreen(){
 		this.setScreen(menuScreen);
+		SoundController.pauseMusic();
 	}
 
 	public void gameFinished(){
 		menuScreen.setFirstTimeShowing(true);
 		this.setScreen(menuScreen);
+		SoundController.stopMusic();
 	}
 
 	@Override

@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import me.guillaumeelias.sandvoxer.Sandvoxer;
 import me.guillaumeelias.sandvoxer.model.Dialog;
+import me.guillaumeelias.sandvoxer.sound.SoundController;
+import me.guillaumeelias.sandvoxer.sound.SoundEvent;
 import me.guillaumeelias.sandvoxer.util.Utils;
 import me.guillaumeelias.sandvoxer.view.screen.GameScreen;
 
@@ -127,6 +129,7 @@ public class DialogRenderer{
             }else{
                 _timer = 0;
                 currentLetter++;
+                SoundController.soundEvent(SoundEvent.LETTER);
             }
         }
 

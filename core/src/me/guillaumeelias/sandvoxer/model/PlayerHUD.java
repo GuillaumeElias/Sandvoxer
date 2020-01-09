@@ -1,5 +1,7 @@
 package me.guillaumeelias.sandvoxer.model;
 
+import me.guillaumeelias.sandvoxer.sound.SoundController;
+import me.guillaumeelias.sandvoxer.sound.SoundEvent;
 import me.guillaumeelias.sandvoxer.view.VoxelType;
 
 import java.util.ArrayList;
@@ -29,6 +31,15 @@ public class PlayerHUD {
     public void setSelection(int selection) {
         if(selection >= 0 && selection < voxelTypes.size()){
             this.selection = selection;
+
+            switch (selection){
+                case 0:
+                    SoundController.soundEvent(SoundEvent.SELECT_VOXEL_TYPE_ONE);
+                    break;
+                case 1:
+                    SoundController.soundEvent(SoundEvent.SELECT_VOXEL_TYPE_TWO);
+                    break;
+            }
         }
     }
 

@@ -19,6 +19,8 @@ import me.guillaumeelias.sandvoxer.controller.InputManager;
 import me.guillaumeelias.sandvoxer.model.Item;
 import me.guillaumeelias.sandvoxer.model.Player;
 import me.guillaumeelias.sandvoxer.model.World;
+import me.guillaumeelias.sandvoxer.sound.SoundController;
+import me.guillaumeelias.sandvoxer.sound.SoundEvent;
 import me.guillaumeelias.sandvoxer.view.CharacterManager;
 import me.guillaumeelias.sandvoxer.view.EnvironmentCubemap;
 import me.guillaumeelias.sandvoxer.view.renderer.DialogRenderer;
@@ -192,11 +194,13 @@ public class GameScreen implements Screen {
                 world.startNextLevel();
                 initPlayer();
                 levelFinished = false;
+                SoundController.changeMusicForLevel(world.getCurrentLevel());
             }
         }
     }
 
     public void startNextLevel(){
+        SoundController.soundEvent(SoundEvent.LEVEL_FINISHED);
         levelFinished = true;
     }
 

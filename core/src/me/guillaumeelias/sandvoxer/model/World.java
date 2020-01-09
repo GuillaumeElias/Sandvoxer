@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
+import me.guillaumeelias.sandvoxer.sound.SoundController;
+import me.guillaumeelias.sandvoxer.sound.SoundEvent;
 import me.guillaumeelias.sandvoxer.util.Utils;
 import me.guillaumeelias.sandvoxer.view.CharacterManager;
 import me.guillaumeelias.sandvoxer.view.VoxelType;
@@ -149,6 +151,8 @@ public class World {
 
             modelInstances.remove(pointedVoxel.getModelInstance());
             cubes[pointedVoxel.xi][pointedVoxel.yi][pointedVoxel.zi] = null;
+
+            SoundController.soundEvent(SoundEvent.REMOVE_BLOCK);
         }
     }
 
@@ -167,20 +171,24 @@ public class World {
         }
 
         //BUILD BOX
-        placeBlock(newXi, newYi, newZi, voxelTypeSelected);
+        placeBlock(newXi, newYi, newZi, voxelTypeSelected, true);
     }
 
-    private void placeBlock(int xi, int yi, int zi, VoxelType voxelType){
+    private void placeBlock(int xi, int yi, int zi, VoxelType voxelType, boolean playSound){
         cubes[xi][yi][zi] = new Voxel(xi, yi, zi, voxelType);
         modelInstances.add(cubes[xi][yi][zi].modelInstance);
 
         player.getPlayerHUD().decrementVoxelTypeQuantity(voxelType);
+
+        if(playSound){
+            SoundController.soundEvent(SoundEvent.PLACE_BLOCK);
+        }
     }
 
     public void onPlayerDeath(){
         //restore spawn block if it was destructed
         if(getCube(Player.PLAYER_INIT_XI,Player.PLAYER_INIT_YI,Player.PLAYER_INIT_ZI) == null){
-            placeBlock(Player.PLAYER_INIT_XI,Player.PLAYER_INIT_YI,Player.PLAYER_INIT_ZI, VoxelType.GRASS);
+            placeBlock(Player.PLAYER_INIT_XI,Player.PLAYER_INIT_YI,Player.PLAYER_INIT_ZI, VoxelType.GRASS, false);
         }
 
         if(currentLevel == 1){ //in case of Level 2, the player death should reinitialize the whole level

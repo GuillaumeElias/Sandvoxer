@@ -1,8 +1,11 @@
 package me.guillaumeelias.sandvoxer.model;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
+import me.guillaumeelias.sandvoxer.sound.SoundController;
+import me.guillaumeelias.sandvoxer.sound.SoundEvent;
 import me.guillaumeelias.sandvoxer.util.Utils;
 import me.guillaumeelias.sandvoxer.view.VoxelType;
 import me.guillaumeelias.sandvoxer.view.renderer.DialogRenderer;
@@ -80,6 +83,7 @@ public class Player {
             if(world.checkBoxCollision(position.x, position.y + yVelocity + UP_CHECK_MARGIN, position.z, PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_DEPTH)){
                 yVelocity = 0;
                 _afterBounce = false;
+                SoundController.stopSound(SoundEvent.JUMP);
             }
 
             yVelocity -= GRAVITY_VELOCITY * deltaTime;
@@ -95,11 +99,17 @@ public class Player {
         if (checkCollision(true)) {
             position.set(_oldPosition);
 
+            if(inAir){
+                SoundController.soundEvent(SoundEvent.REACHED_GROUND);
+            }
+
             inAir = false;
             if(_bounce){
                 yVelocity = BOUNCE_VELOCITY;
                 _bounce = false;
                 _afterBounce = true;
+                SoundController.stopSound(SoundEvent.REACHED_GROUND);
+                SoundController.soundEvent(SoundEvent.BOUNCE);
             }else {
                 _afterBounce = false;
             }
@@ -166,9 +176,13 @@ public class Player {
     public void jump(float deltaTime) {
         if(!inAir){
             yVelocity = JUMP_VELOCITY;
+            Gdx.app.log("","jump");
+            SoundController.soundEvent(SoundEvent.JUMP);
         }else if(_afterBounce && _jumpTimer < BOUNCY_JUMP_ALLOW_TIME_SECS){
             yVelocity =+ JUMP_VELOCITY + BOUNCE_VELOCITY;
             _afterBounce = false;
+            SoundController.stopSound(SoundEvent.JUMP);
+            SoundController.soundEvent(SoundEvent.JUMP_BOUNCE);
         }
     }
 
@@ -256,6 +270,7 @@ public class Player {
             //TODO show dialog
             playerHUD.addVoxelType(item.getYieldedVoxelType());
             world.removeItem(item);
+            SoundController.soundEvent(SoundEvent.NEW_ITEM);
         }
     }
 

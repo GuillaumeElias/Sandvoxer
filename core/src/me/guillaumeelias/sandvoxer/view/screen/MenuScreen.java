@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -17,6 +18,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import me.guillaumeelias.sandvoxer.Sandvoxer;
+import me.guillaumeelias.sandvoxer.sound.SoundController;
+import me.guillaumeelias.sandvoxer.sound.SoundEvent;
 
 public class MenuScreen extends InputListener implements Screen {
 
@@ -29,6 +32,8 @@ public class MenuScreen extends InputListener implements Screen {
     Stage stage;
     Skin skin;
     private Sandvoxer sandvoxer;
+
+    private HoverListener hoverListener;
 
     boolean firstTimeShowing = true;
 
@@ -43,6 +48,7 @@ public class MenuScreen extends InputListener implements Screen {
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         camera.update();
 
+        hoverListener = new HoverListener();
     }
 
     @Override
@@ -63,8 +69,10 @@ public class MenuScreen extends InputListener implements Screen {
             public void clicked(InputEvent event, float x, float y){
                 MenuScreen.this.sandvoxer.switchToGameScreen();
                 firstTimeShowing = false;
+                SoundController.soundEvent(SoundEvent.PLACE_BLOCK);
             }
         });
+        startButton.addListener(hoverListener);
 
         //About button
         final TextButton aboutButton = createButton("About");
@@ -75,6 +83,7 @@ public class MenuScreen extends InputListener implements Screen {
                 startButton.setText("Timmy O'Toole");   //TODO show credits
             }
         });
+        aboutButton.addListener(hoverListener);
 
         //About button
         final TextButton exitButton = createButton("Exit");
@@ -85,6 +94,7 @@ public class MenuScreen extends InputListener implements Screen {
                 System.exit(0);
             }
         });
+        exitButton.addListener(hoverListener);
 
         stage.addActor(startButton);
         stage.addActor(aboutButton);
@@ -157,5 +167,13 @@ public class MenuScreen extends InputListener implements Screen {
         button.setWidth(200f);
         button.setHeight(20f);
         return button;
+    }
+
+    private static class HoverListener extends InputListener {
+        @Override
+        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+            super.enter(event, x, y, pointer, fromActor);
+            SoundController.soundEvent(SoundEvent.LETTER);
+        }
     }
 }
