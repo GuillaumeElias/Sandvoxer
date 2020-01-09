@@ -11,11 +11,15 @@ import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
+/**
+ * Thanks to Nolesh
+ */
 public class EnvironmentCubemap implements Disposable {
 
     protected final Pixmap[] data = new Pixmap[6];
     protected ShaderProgram shader;
 
+    Matrix4 worldTrans;
     protected int u_worldTrans;
     protected Mesh quad;
 
@@ -61,14 +65,11 @@ public class EnvironmentCubemap implements Disposable {
 
         quad = createQuad();
         worldTrans = new Matrix4();
-        fakeCam = new Matrix4();
-        fakeCam.setTranslation(0, 0, -1f);
 
-        initCubemap();
+        init();
     }
 
-    private void initCubemap(){
-        //bind cubemap
+    private void init(){
         Gdx.gl20.glBindTexture(GL20.GL_TEXTURE_CUBE_MAP, 0);
         Gdx.gl20.glTexImage2D(GL20.GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL20.GL_RGB, data[0].getWidth(), data[0].getHeight(), 0, GL20.GL_RGB, GL20.GL_UNSIGNED_BYTE, data[0].getPixels());
         Gdx.gl20.glTexImage2D(GL20.GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL20.GL_RGB, data[1].getWidth(), data[1].getHeight(), 0, GL20.GL_RGB, GL20.GL_UNSIGNED_BYTE, data[1].getPixels());
@@ -87,15 +88,13 @@ public class EnvironmentCubemap implements Disposable {
         Gdx.gl20.glGenerateMipmap(GL20.GL_TEXTURE_CUBE_MAP);
     }
 
-    Matrix4 worldTrans, fakeCam;
-
     public void render(Quaternion quaternion) {
 
         worldTrans.idt();
-        worldTrans.rotate(quaternion);
+        worldTrans.rotate(quaternion); //TODO only rotate when camera is moving?
 
         shader.begin();
-        shader.setUniformMatrix(u_worldTrans, worldTrans.cpy().mul(fakeCam));
+        shader.setUniformMatrix(u_worldTrans, worldTrans.translate(0, 0, -1));
 
         quad.render(shader, GL20.GL_TRIANGLES);
         shader.end();

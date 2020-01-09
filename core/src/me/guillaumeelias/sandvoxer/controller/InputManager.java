@@ -167,8 +167,6 @@ public class InputManager extends InputAdapter {
         refreshCameraPosition();
 
         cam.update(true);
-
-        refreshQ();
     }
 
     public void refreshQ(){
