@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.IntIntMap;
@@ -20,6 +21,8 @@ public class InputManager extends InputAdapter {
     private final Player player;
     private final World world;
     private Sandvoxer sandvoxer;
+
+    Quaternion q = new Quaternion();
 
     private int _mouseX;
     private int _mouseY;
@@ -134,6 +137,8 @@ public class InputManager extends InputAdapter {
         _mouseX = screenX;
         _mouseY = screenY;
 
+        refreshQ();
+
         return true;
     }
 
@@ -162,6 +167,17 @@ public class InputManager extends InputAdapter {
         refreshCameraPosition();
 
         cam.update(true);
+
+        refreshQ();
+    }
+
+    public void refreshQ(){
+        cam.view.getRotation( q, true );
+        q.conjugate();
+    }
+
+    public Quaternion getQ() {
+        return q;
     }
 
     private void refreshCameraPosition() {

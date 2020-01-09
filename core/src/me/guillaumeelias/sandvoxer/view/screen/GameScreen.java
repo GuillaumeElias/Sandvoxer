@@ -12,7 +12,6 @@ import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.shapebuilders.BoxShapeBuilder;
 import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import me.guillaumeelias.sandvoxer.Sandvoxer;
@@ -172,11 +171,10 @@ public class GameScreen implements Screen {
         Gdx.gl.glViewport(0, 0, width, height);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-        Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
-        Gdx.gl.glDepthMask(false);
-
         //poll inputs and update camera
         inputManager.update(deltaTime);
+
+        cubemap.render(inputManager.getQ());
 
         //render
         renderModels();
@@ -209,13 +207,6 @@ public class GameScreen implements Screen {
 
     private void renderModels(){
         modelBatch.begin(cam);
-
-        Quaternion q = new Quaternion();
-        cam.view.getRotation( q, true );
-        q.conjugate();
-
-        cubemap.render(q);
-
         modelBatch.render(world.getModelInstances(), environment);
         //modelBatch.render(debugInstances, environment); //RENDER DEBUG MODELS
         modelBatch.render(characterManager.getModelInstances(), environment);

@@ -63,18 +63,11 @@ public class EnvironmentCubemap implements Disposable {
         worldTrans = new Matrix4();
         fakeCam = new Matrix4();
         fakeCam.setTranslation(0, 0, -1f);
+
+        initCubemap();
     }
 
-    Matrix4 worldTrans, fakeCam;
-
-    public void render(Quaternion quaternion) {
-
-        worldTrans.idt();
-        worldTrans.rotate(quaternion);
-
-        shader.begin();
-        shader.setUniformMatrix(u_worldTrans, worldTrans.cpy().mul(fakeCam));
-
+    private void initCubemap(){
         //bind cubemap
         Gdx.gl20.glBindTexture(GL20.GL_TEXTURE_CUBE_MAP, 0);
         Gdx.gl20.glTexImage2D(GL20.GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL20.GL_RGB, data[0].getWidth(), data[0].getHeight(), 0, GL20.GL_RGB, GL20.GL_UNSIGNED_BYTE, data[0].getPixels());
@@ -86,12 +79,23 @@ public class EnvironmentCubemap implements Disposable {
         Gdx.gl20.glTexImage2D(GL20.GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL20.GL_RGB, data[4].getWidth(), data[4].getHeight(), 0, GL20.GL_RGB, GL20.GL_UNSIGNED_BYTE, data[4].getPixels());
         Gdx.gl20.glTexImage2D(GL20.GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL20.GL_RGB, data[5].getWidth(), data[5].getHeight(), 0, GL20.GL_RGB, GL20.GL_UNSIGNED_BYTE, data[5].getPixels());
 
-        Gdx.gl20.glTexParameteri(GL20.GL_TEXTURE_CUBE_MAP, GL20.GL_TEXTURE_MIN_FILTER, GL20.GL_LINEAR_MIPMAP_LINEAR);
-        Gdx.gl20.glTexParameteri(GL20.GL_TEXTURE_CUBE_MAP, GL20.GL_TEXTURE_MAG_FILTER, GL20.GL_LINEAR);
-        Gdx.gl20.glTexParameteri(GL20.GL_TEXTURE_CUBE_MAP, GL20.GL_TEXTURE_WRAP_S, GL20.GL_CLAMP_TO_EDGE);
-        Gdx.gl20.glTexParameteri(GL20.GL_TEXTURE_CUBE_MAP, GL20.GL_TEXTURE_WRAP_T, GL20.GL_CLAMP_TO_EDGE);
+        Gdx.gl20.glTexParameteri ( GL20.GL_TEXTURE_CUBE_MAP, GL20.GL_TEXTURE_MIN_FILTER,GL20.GL_LINEAR_MIPMAP_LINEAR );
+        Gdx.gl20.glTexParameteri ( GL20.GL_TEXTURE_CUBE_MAP, GL20.GL_TEXTURE_MAG_FILTER,GL20.GL_LINEAR );
+        Gdx.gl20.glTexParameteri ( GL20.GL_TEXTURE_CUBE_MAP, GL20.GL_TEXTURE_WRAP_S, GL20.GL_CLAMP_TO_EDGE );
+        Gdx.gl20.glTexParameteri ( GL20.GL_TEXTURE_CUBE_MAP, GL20.GL_TEXTURE_WRAP_T, GL20.GL_CLAMP_TO_EDGE );
 
         Gdx.gl20.glGenerateMipmap(GL20.GL_TEXTURE_CUBE_MAP);
+    }
+
+    Matrix4 worldTrans, fakeCam;
+
+    public void render(Quaternion quaternion) {
+
+        worldTrans.idt();
+        worldTrans.rotate(quaternion);
+
+        shader.begin();
+        shader.setUniformMatrix(u_worldTrans, worldTrans.cpy().mul(fakeCam));
 
         quad.render(shader, GL20.GL_TRIANGLES);
         shader.end();
