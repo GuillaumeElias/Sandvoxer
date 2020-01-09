@@ -52,9 +52,13 @@ public class GameScreen implements Screen {
     PlayerHUDRenderer playerHUDRenderer;
     CharacterManager characterManager;
 
+    boolean levelFinished;
+
     public GameScreen(Sandvoxer sandvoxer){
         instance = this;
         this.sandvoxer = sandvoxer;
+
+        levelFinished = false;
 
         this.font = new BitmapFont(Gdx.files.internal("skin/font_pro_font_windows_20pt.fnt"), false);
         DialogRenderer.instance.initialize(font);
@@ -165,12 +169,15 @@ public class GameScreen implements Screen {
         if(player.isDead()){
             initPlayer();
             world.restoreSpawnBlockIfDestructed();
+        }else if(levelFinished){
+            world.startNextLevel();
+            initPlayer();
+            levelFinished = false;
         }
     }
 
     public void startNextLevel(){
-        world.startNextLevel();
-        initPlayer();
+        levelFinished = true;
     }
 
     public void initPlayer(){

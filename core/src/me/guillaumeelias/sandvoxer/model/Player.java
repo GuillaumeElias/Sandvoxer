@@ -54,11 +54,6 @@ public class Player {
 
         this.playerHUD = new PlayerHUD();
 
-        this._tmp = new Vector3();
-        this._oldPosition = new Vector3();
-        this._bounce = false;
-        this._jumpTimer = 0;
-
         this.cam = camera;
         birth();
 
@@ -68,6 +63,11 @@ public class Player {
     public void birth(){
         yVelocity = 0;
         inAir = false;
+
+        this._tmp = new Vector3();
+        this._oldPosition = new Vector3();
+        this._bounce = false;
+        this._jumpTimer = 0;
 
         this.position = new Vector3(PLAYER_INIT_XI * Voxel.CUBE_SIZE, PLAYER_INIT_YI + PLAYER_HEIGHT + 20, PLAYER_INIT_ZI * Voxel.CUBE_SIZE);
         this.cam.position.set(this.position);
