@@ -139,6 +139,10 @@ public class World {
         {
             Voxel pointedVoxel = hitVoxel.voxel;
 
+            if(hitVoxel.voxel.getType() == VoxelType.RED_COLOR){ //can't remove red blocks
+                return;
+            }
+
             if(player.getPlayerHUD().hasVoxelType(pointedVoxel.type)){
                 player.getPlayerHUD().incrementVoxelTypeQuantity(pointedVoxel.type);
             }
@@ -173,9 +177,14 @@ public class World {
         player.getPlayerHUD().decrementVoxelTypeQuantity(voxelType);
     }
 
-    public void restoreSpawnBlockIfDestructed(){
+    public void onPlayerDeath(){
+        //restore spawn block if it was destructed
         if(getCube(Player.PLAYER_INIT_XI,Player.PLAYER_INIT_YI,Player.PLAYER_INIT_ZI) == null){
             placeBlock(Player.PLAYER_INIT_XI,Player.PLAYER_INIT_YI,Player.PLAYER_INIT_ZI, VoxelType.GRASS);
+        }
+
+        if(currentLevel == 1){ //in case of Level 2, the player death should reinitialize the whole level
+            startLevel();
         }
     }
 
@@ -344,6 +353,10 @@ public class World {
 
     public int getCurrentLevel() {
         return currentLevel;
+    }
+
+    public void setCurrentLevel(int currentLevel) {
+        this.currentLevel = currentLevel;
     }
 
     private static class HitVoxel {

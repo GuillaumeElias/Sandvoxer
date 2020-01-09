@@ -31,6 +31,39 @@ public enum Dialog {
         "Yeah",
         "Bounce away baby",
         "Scroll or press 2 and reach the blue platform"
+    },200),
+    BEAR_DIALOG_1(new String[]{
+            "Yo",
+            "This has been cool and all",
+            "But now you have a limited amount of blocks",
+            "That'll teach you how to be economic!"
+    },200),
+    BEAR_DIALOG_REPEAT(new String[]{
+            "As I said",
+            "Be economic",
+            "You can right click on a block to pick it back up"
+    },200),
+    JOEYTHESHEEP_DIALOG_1(new String[]{
+            "Yorg",
+            "Not easy huh?",
+            "Ha ha ha ha ha ha !",
+            "The next platform in on your left."
+    },200),
+    JOEYTHESHEEP_DIALOG_REPEAT(new String[]{
+            "Hu hu hu hu!"
+    },200),
+    TIKI_DIALOG_1(new String[]{
+            "Hello !",
+            "This last one is going to be hard",
+            "Make sure you have enough materials before jumping into the blue",
+    },200),
+    TIKI_DIALOG_REPEAT(new String[]{
+            "Aim for the blue platform"
+    },200),
+    END_GAME_DIALOG(new String[]{
+            "This is the end of this game",
+            "I hope you sort of enjoyed it",
+            "If so, check out my other games at timmyotoole.itch.io"
     },200);
 
 

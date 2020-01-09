@@ -5,7 +5,10 @@ import com.badlogic.gdx.graphics.g3d.Model;
 public enum CharacterType {
     CHICKEN("models/chicken-rigged.g3db",
             "chicken-rig|chicken-rig|chicken-rig|idle|chicken-rig|idle", 30, 2),
-    WOLF("models/wolf.g3db", "Armature|Beta Idle", 200, 1);
+    WOLF("models/wolf.g3db", "Armature|Beta Idle", 200, 1),
+    BEAR("models/bear.g3db", "Armature.BearO|Armature.BearO|Armature.BearO|Armature.BearOAction|Armature.Bea", 200, 1),
+    JOEYTHESHEEP("models/joeythesheep.g3db", "Armature.JoeyTheSheep|Armature.JoeyTheSheep|Armature.JoeyTheSheep|Armature.JoeyTheShe", 200, 1),
+    TIKI("models/tiki.g3db", "Malamute.Armature|Malamute.Armature|Malamute.Armature|ArmatureAction|Malamute.Arm", 50, 1);
 
     private Model model;
     private String defaultAnimationId;

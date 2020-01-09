@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import me.guillaumeelias.sandvoxer.Sandvoxer;
 import me.guillaumeelias.sandvoxer.model.Dialog;
 import me.guillaumeelias.sandvoxer.util.Utils;
+import me.guillaumeelias.sandvoxer.view.screen.GameScreen;
 
 public class DialogRenderer{
 
@@ -85,8 +86,13 @@ public class DialogRenderer{
 
         if(currentLine >= currentDialog.getNumberOfLines()){
             currentDialog.setPlayed(true);
+
+            if(currentDialog == Dialog.END_GAME_DIALOG){
+                GameScreen.getInstance().startNextLevel();
+            }
             currentDialog = null;
             currentLine = -1;
+
             return false;
         }
 

@@ -45,21 +45,27 @@ public class LevelGenerator {
                 playerHUD.setVoxelTypes(new ArrayList<>(Arrays.asList(new VoxelType[]{VoxelType.SAND})));
                 playerHUD.setSelection(0);
                 playerHUD.setVoxelTypeQuantity(VoxelType.SAND,3);
-                playerHUD.setVoxelTypeQuantity(VoxelType.BOUNCY_STUFF,2);
+                playerHUD.setVoxelTypeQuantity(VoxelType.BOUNCY_STUFF,9);
 
                 //INITIALIZE PLATFORMS
-                createPlatform(0, 90, 90, VoxelType.WOOD, cubes);
+                createPlatform(0, 90, 90, VoxelType.DIRT, cubes);
                 createPlatform(7, 120, 120, VoxelType.GRASS_2, cubes);
-                createPlatform(80, 150, 30, VoxelType.BLUE_STUFF, cubes);
+                createPlatform(30, 150, 30, VoxelType.WOOD, cubes);
+                createPlatform(90, 100, 60, VoxelType.BLUE_STUFF, cubes);
 
                 //ADD AD-HOC BLOCKS
-                //TODO
+                cubes[110][91][70] = new Voxel (110,91,70, VoxelType.RED_COLOR);
 
                 //ADD ITEMS
-                createNewItem(new Vector3(130 * Voxel.CUBE_SIZE, 8 * Voxel.CUBE_SIZE,Voxel.CUBE_SIZE * 130), VoxelType.BOUNCY_STUFF, itemList);
+                createNewItem(new Vector3(130 * Voxel.CUBE_SIZE, 8 * Voxel.CUBE_SIZE,Voxel.CUBE_SIZE * 130), VoxelType.SAND, itemList);
+                createNewItem(new Vector3(160 * Voxel.CUBE_SIZE, 31 * Voxel.CUBE_SIZE,Voxel.CUBE_SIZE * 35), VoxelType.BOUNCY_STUFF, itemList);
+                createNewItem(new Vector3(165 * Voxel.CUBE_SIZE, 31 * Voxel.CUBE_SIZE,Voxel.CUBE_SIZE * 40), VoxelType.SAND, itemList);
 
                 //ADD TRIGGERS
-                //TODO
+                cubes[100][0][101].setTrigger(new DialogTrigger(Dialog.BEAR_DIALOG_1, Dialog.BEAR_DIALOG_REPEAT, 1));
+                cubes[135][7][135].setTrigger(new DialogTrigger(Dialog.JOEYTHESHEEP_DIALOG_1, Dialog.JOEYTHESHEEP_DIALOG_REPEAT, 1));
+                cubes[159][30][41].setTrigger(new DialogTrigger(Dialog.TIKI_DIALOG_1, Dialog.TIKI_DIALOG_REPEAT, 1));
+                cubes[110][91][70].setTrigger(new EndLevelTrigger(4));
 
                 break;
         }

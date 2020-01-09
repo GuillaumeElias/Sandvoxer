@@ -11,6 +11,8 @@ public class Item {
     public static final float ITEM_SIDE_LENGTH = 1;
     public static final float ROTATION_SPEED = 120f;
 
+    public static final int REFILL_QUANTITY_AMOUNT = 3;
+
     private Vector3 position;
 
     private BoundingBox boundingBox;

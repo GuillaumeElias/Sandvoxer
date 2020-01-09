@@ -168,11 +168,17 @@ public class GameScreen implements Screen {
 
         if(player.isDead()){
             initPlayer();
-            world.restoreSpawnBlockIfDestructed();
+            world.onPlayerDeath();
         }else if(levelFinished){
-            world.startNextLevel();
-            initPlayer();
-            levelFinished = false;
+
+            if(world.getCurrentLevel() == 1){ //end of game
+                sandvoxer.gameFinished();
+                world.setCurrentLevel(0);
+            }else{
+                world.startNextLevel();
+                initPlayer();
+                levelFinished = false;
+            }
         }
     }
 

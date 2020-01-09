@@ -9,7 +9,6 @@ import java.util.Map;
 
 public class PlayerHUD {
 
-
     boolean infiniteMaterials;
 
     Map<VoxelType, Integer> voxelTypesQuantities;
@@ -81,7 +80,11 @@ public class PlayerHUD {
     }
 
     public void addVoxelType(VoxelType yieldedVoxelType) {
-        voxelTypes.add(yieldedVoxelType);
+        if(voxelTypes.contains(yieldedVoxelType)){
+            setVoxelTypeQuantity(yieldedVoxelType, Item.REFILL_QUANTITY_AMOUNT);
+        }else{
+            voxelTypes.add(yieldedVoxelType);
+        }
     }
 
     public void setInfiniteMaterials(boolean infiniteMaterials) {

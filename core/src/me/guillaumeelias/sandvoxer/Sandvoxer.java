@@ -31,6 +31,11 @@ public class Sandvoxer extends Game {
 		this.setScreen(menuScreen);
 	}
 
+	public void gameFinished(){
+		menuScreen.setFirstTimeShowing(true);
+		this.setScreen(menuScreen);
+	}
+
 	@Override
 	public void render() {
 		super.render();

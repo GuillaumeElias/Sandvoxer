@@ -147,6 +147,10 @@ public class MenuScreen extends InputListener implements Screen {
         return super.keyDown(event, keycode);
     }
 
+    public void setFirstTimeShowing(boolean firstTimeShowing) {
+        this.firstTimeShowing = firstTimeShowing;
+    }
+
     private TextButton createButton(String text){
         TextButton button = new TextButton(text, skin, "default");
 
@@ -154,5 +158,4 @@ public class MenuScreen extends InputListener implements Screen {
         button.setHeight(20f);
         return button;
     }
-
 }

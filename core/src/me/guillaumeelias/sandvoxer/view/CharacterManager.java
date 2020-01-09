@@ -26,9 +26,11 @@ public class CharacterManager {
             case 0:
                 createCharacter(new Vector3(1010,5,1020), CharacterType.CHICKEN);
                 createCharacter(new Vector3(1400,185,1400), CharacterType.WOLF);
-                //createCharacter(new Vector3(1012,5,1020), CharacterType.PARTICLES);
+                break;
             case 1:
-                //TODO
+                createCharacter(new Vector3(1010,5,1020), CharacterType.BEAR);
+                createCharacter(new Vector3(1360,75,1360), CharacterType.JOEYTHESHEEP);
+                createCharacter(new Vector3(1600,305,400), CharacterType.TIKI);
         }
 
     }
