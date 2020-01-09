@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -21,7 +22,7 @@ import me.guillaumeelias.sandvoxer.Sandvoxer;
 import me.guillaumeelias.sandvoxer.sound.SoundController;
 import me.guillaumeelias.sandvoxer.sound.SoundEvent;
 
-public class MenuScreen extends InputListener implements Screen {
+public class AboutScreen extends InputListener implements Screen {
 
     private final static Texture LOGO_TEXTURE = new Texture("logo.png");
     private final static int MARGIN_TOP = 20;
@@ -35,9 +36,7 @@ public class MenuScreen extends InputListener implements Screen {
 
     private HoverListener hoverListener;
 
-    boolean firstTimeShowing = true;
-
-    public MenuScreen(Sandvoxer sandvoxer) {
+    public AboutScreen(Sandvoxer sandvoxer) {
         this.sandvoxer = sandvoxer;
 
         batch = new SpriteBatch();
@@ -61,48 +60,31 @@ public class MenuScreen extends InputListener implements Screen {
         logoImage.setPosition(Gdx.graphics.getWidth() /2 - LOGO_TEXTURE.getWidth() / 2, Gdx.graphics.getHeight() - LOGO_TEXTURE.getHeight() - MARGIN_TOP);
         stage.addActor(logoImage);
 
-        //Start game button
-        final TextButton startButton = createButton(firstTimeShowing ? "Start game" : "Resume");
-        startButton.setPosition(Gdx.graphics.getWidth() /2 - 100f, Gdx.graphics.getHeight()/2 - 10f);
-        startButton.addListener(new ClickListener(){
+        final Label label = new Label("Game made by Timmy O'Toole (www.timmyotoolebits.tumblr.com)\n" +
+                "Chicken model made by Čestmír Dammer\n" +
+                "Bear and Joey The Sheep models made by Martin S Stroller\n" +
+                "This project uses libGDX\n", skin);
+
+
+        label.setWidth(400f);
+        label.setHeight(200f);
+        label.setPosition(Gdx.graphics.getWidth() /2 - 300f, Gdx.graphics.getHeight()/2 - 10f);
+
+
+        final TextButton button = createButton("OK !");
+        button.setPosition(Gdx.graphics.getWidth() /2 - 100f, Gdx.graphics.getHeight()/2 - 30f);
+        button.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-                MenuScreen.this.sandvoxer.switchToGameScreen();
-                firstTimeShowing = false;
+                AboutScreen.this.sandvoxer.switchToMenuScreen();
                 SoundController.soundEvent(SoundEvent.PLACE_BLOCK);
             }
         });
-        startButton.addListener(hoverListener);
+        button.addListener(hoverListener);
 
-        //About button
-        final TextButton aboutButton = createButton("About");
-        aboutButton.setPosition(Gdx.graphics.getWidth() /2 - 100f, Gdx.graphics.getHeight()/2 - 30f);
-        aboutButton.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y){
-                sandvoxer.switchToAboutScreen();
-            }
-        });
-        aboutButton.addListener(hoverListener);
+        stage.addActor(label);
+        stage.addActor(button);
 
-        //About button
-        final TextButton exitButton = createButton("Exit");
-        exitButton.setPosition(Gdx.graphics.getWidth() /2 - 100f, Gdx.graphics.getHeight()/2 - 50f);
-        exitButton.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y){
-                System.exit(0);
-            }
-        });
-        exitButton.addListener(hoverListener);
-
-        stage.addActor(startButton);
-        stage.addActor(aboutButton);
-        stage.addActor(exitButton);
-
-        if(!firstTimeShowing){
-            Gdx.input.setCursorPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
-        }
 
         Gdx.input.setInputProcessor(stage);
         Gdx.input.setCursorCatched(false);
@@ -155,10 +137,6 @@ public class MenuScreen extends InputListener implements Screen {
             sandvoxer.switchToGameScreen();
         }
         return super.keyDown(event, keycode);
-    }
-
-    public void setFirstTimeShowing(boolean firstTimeShowing) {
-        this.firstTimeShowing = firstTimeShowing;
     }
 
     private TextButton createButton(String text){
