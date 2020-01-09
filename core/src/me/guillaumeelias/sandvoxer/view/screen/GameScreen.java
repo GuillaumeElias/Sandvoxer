@@ -2,10 +2,7 @@ package me.guillaumeelias.sandvoxer.view.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.VertexAttributes;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.*;
@@ -15,6 +12,7 @@ import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.shapebuilders.BoxShapeBuilder;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import me.guillaumeelias.sandvoxer.Sandvoxer;
@@ -23,6 +21,7 @@ import me.guillaumeelias.sandvoxer.model.Item;
 import me.guillaumeelias.sandvoxer.model.Player;
 import me.guillaumeelias.sandvoxer.model.World;
 import me.guillaumeelias.sandvoxer.view.CharacterManager;
+import me.guillaumeelias.sandvoxer.view.EnvironmentCubemap;
 import me.guillaumeelias.sandvoxer.view.renderer.DialogRenderer;
 import me.guillaumeelias.sandvoxer.view.renderer.PlayerHUDRenderer;
 
@@ -53,6 +52,8 @@ public class GameScreen implements Screen {
     CharacterManager characterManager;
 
     boolean levelFinished;
+
+    EnvironmentCubemap cubemap;
 
     public GameScreen(Sandvoxer sandvoxer){
         instance = this;
@@ -91,6 +92,17 @@ public class GameScreen implements Screen {
 
         //INITIALIZE SPRITES
         playerHUDRenderer.initialize();
+
+        Pixmap skyboxPixmap = new Pixmap(Gdx.files.internal("textures/skybox/skybox.jpg"));
+
+        cubemap = new EnvironmentCubemap(
+                skyboxPixmap,
+                skyboxPixmap,
+                new Pixmap(Gdx.files.internal("textures/skybox/skyboxTop.jpg")),
+                new Pixmap(Gdx.files.internal("textures/skybox/skyboxBottom.jpg")),
+                skyboxPixmap,
+                skyboxPixmap
+        );
     }
 
     @Override
@@ -120,6 +132,7 @@ public class GameScreen implements Screen {
                 }
             }
         }*/
+
     }
 
     public void createDebugVector (Vector3 from, Vector3 to) {
@@ -159,6 +172,9 @@ public class GameScreen implements Screen {
         Gdx.gl.glViewport(0, 0, width, height);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
+        Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
+        Gdx.gl.glDepthMask(false);
+
         //poll inputs and update camera
         inputManager.update(deltaTime);
 
@@ -193,6 +209,13 @@ public class GameScreen implements Screen {
 
     private void renderModels(){
         modelBatch.begin(cam);
+
+        Quaternion q = new Quaternion();
+        cam.view.getRotation( q, true );
+        q.conjugate();
+
+        cubemap.render(q);
+
         modelBatch.render(world.getModelInstances(), environment);
         //modelBatch.render(debugInstances, environment); //RENDER DEBUG MODELS
         modelBatch.render(characterManager.getModelInstances(), environment);
