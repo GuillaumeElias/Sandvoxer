@@ -11,6 +11,8 @@ import com.badlogic.gdx.utils.IntIntMap;
 import me.guillaumeelias.sandvoxer.Sandvoxer;
 import me.guillaumeelias.sandvoxer.model.Player;
 import me.guillaumeelias.sandvoxer.model.World;
+import me.guillaumeelias.sandvoxer.sound.SoundController;
+import me.guillaumeelias.sandvoxer.sound.SoundEvent;
 
 public class InputManager extends InputAdapter {
 
@@ -52,6 +54,13 @@ public class InputManager extends InputAdapter {
     @Override
     public boolean keyUp (int keycode) {
         keys.remove(keycode, 0);
+
+        if(keycode == Keys.W){
+            if(SoundController.isSoundPlaying(SoundEvent.WALK)) {
+                SoundController.stopSound(SoundEvent.WALK);
+            }
+        }
+
         return true;
     }
 
@@ -144,7 +153,10 @@ public class InputManager extends InputAdapter {
 
     public void update (float deltaTime) {
 
+        boolean move = false;
+
         if (keys.containsKey(Keys.W) || keys.containsKey(Keys.Z)) {
+            move = true;
             player.moveForward(deltaTime);
         }
         if (keys.containsKey(Keys.S) ) {
@@ -167,6 +179,14 @@ public class InputManager extends InputAdapter {
         refreshCameraPosition();
 
         cam.update(true);
+
+        if(move){
+            if(!player.isInAir() && !SoundController.isSoundPlaying(SoundEvent.WALK)){
+                SoundController.soundEvent(SoundEvent.WALK);
+            }
+        }else if(SoundController.isSoundPlaying(SoundEvent.WALK)){
+            SoundController.stopSound(SoundEvent.WALK);
+        }
     }
 
     public void refreshQ(){

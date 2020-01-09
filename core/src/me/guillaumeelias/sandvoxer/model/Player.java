@@ -122,6 +122,7 @@ public class Player {
             } else if (yVelocity > -FALL_MAX_VELOCITY) {
                 yVelocity -= GRAVITY_VELOCITY * deltaTime;
             }
+            SoundController.stopSound(SoundEvent.WALK);
         }
 
         checkItemsCollision();
@@ -137,6 +138,7 @@ public class Player {
         position.sub(_tmp.x,0,0);
         if(checkCollision(false)){
             position.set(_oldPosition);
+            SoundController.stopSound(SoundEvent.WALK);
         }
 
         //APPLY Y
@@ -145,6 +147,7 @@ public class Player {
         position.sub(0,0,_tmp.z);
         if(checkCollision(false)){
             position.set(_oldPosition);
+            SoundController.stopSound(SoundEvent.WALK);
         }
 
         checkItemsCollision();
@@ -174,6 +177,8 @@ public class Player {
     }
 
     public void jump(float deltaTime) {
+        SoundController.stopSound(SoundEvent.WALK);
+
         if(!inAir){
             yVelocity = JUMP_VELOCITY;
             Gdx.app.log("","jump");
@@ -304,6 +309,10 @@ public class Player {
 
     public void setWorld(World world) {
         this.world = world;
+    }
+
+    public boolean isInAir() {
+        return inAir;
     }
 
     public static Player getInstance(){

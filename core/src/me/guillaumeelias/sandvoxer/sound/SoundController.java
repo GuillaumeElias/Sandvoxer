@@ -4,6 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class SoundController {
 
     private static final float MUSIC_VOLUME = 0.5f;
@@ -20,10 +23,11 @@ public class SoundController {
     private static Sound newItemSound;
     private static Sound selectVoxelTypeOneSound;
     private static Sound selectVoxelTypeTwoSound;
+    private static Sound walkSound;
     private static Sound levelFinishedSound;
 
 
-    //private static Map<SoundEvent, Long> soundIds;
+    private static Map<SoundEvent, Long> soundIds = new HashMap<>();
 
     public static void initialize() {
         currentMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/music/level0.mp3"));
@@ -38,6 +42,7 @@ public class SoundController {
         newItemSound = Gdx.audio.newSound(Gdx.files.internal("sound/newItem.mp3"));
         selectVoxelTypeOneSound = Gdx.audio.newSound(Gdx.files.internal("sound/selectVoxelTypeOne.mp3"));
         selectVoxelTypeTwoSound = Gdx.audio.newSound(Gdx.files.internal("sound/selectVoxelTypeTwo.mp3"));
+        walkSound = Gdx.audio.newSound(Gdx.files.internal("sound/walk.mp3"));
         levelFinishedSound = Gdx.audio.newSound(Gdx.files.internal("sound/levelFinished.mp3"));
     }
 
@@ -60,6 +65,8 @@ public class SoundController {
                 currentMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/music/level1.mp3"));
                 break;
         }
+
+        startMusic();
     }
 
     public static void soundEvent(SoundEvent soundEvent){
@@ -97,13 +104,17 @@ public class SoundController {
             case SELECT_VOXEL_TYPE_TWO:
                 id  = selectVoxelTypeTwoSound.play();
                 break;
+            case WALK:
+                id  = walkSound.play();
+                walkSound.setLooping(id, true);
+                break;
             case LEVEL_FINISHED:
                 id  = levelFinishedSound.play();
                 break;
 
         }
 
-        //soundIds.put(soundEvent, id);
+        soundIds.put(soundEvent, id);
     }
 
     public static void stopSound(SoundEvent soundEvent){
@@ -113,8 +124,17 @@ public class SoundController {
                 break;
             case REACHED_GROUND:
                 reachedGroundSound.stop();
+                break;
+            case WALK:
+                walkSound.stop();
+                break;
         }
 
+        soundIds.remove(soundEvent);
+    }
+
+    public static boolean isSoundPlaying(SoundEvent soundEvent){
+        return soundIds.containsKey(soundEvent);
     }
 
     public static void pauseMusic() {
