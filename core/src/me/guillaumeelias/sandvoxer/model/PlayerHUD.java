@@ -27,22 +27,14 @@ public class PlayerHUD {
         selection = 0; //SAND
     }
 
-    public void selectionUp(){
-        if(voxelTypes.size() - 1 > selection){
-            selection++;
-        }
-    }
-
-    public void selectionDown(){
-        if(selection > 0){
-            selection--;
-        }
-    }
-
     public void setSelection(int selection) {
         if(selection >= 0 && selection < voxelTypes.size()){
             this.selection = selection;
         }
+    }
+
+    public void setVoxelTypes(List<VoxelType> voxelTypes) {
+        this.voxelTypes = voxelTypes;
     }
 
     public int getSelection() {
@@ -50,11 +42,14 @@ public class PlayerHUD {
     }
 
     public VoxelType getSelectedVoxelType(){
-        if(voxelTypes.isEmpty()) return null;
+        if(selection >= voxelTypes.size()) return null;
 
         return voxelTypes.get(selection);
     }
 
+    public boolean hasVoxelType(VoxelType voxelType){
+        return voxelTypesQuantities.containsKey(voxelType);
+    }
 
     public int getQuantityForVoxelType(VoxelType voxelType){
         Integer quantity = voxelTypesQuantities.get(voxelType);
@@ -73,6 +68,10 @@ public class PlayerHUD {
         voxelTypesQuantities.put(voxelType,  getQuantityForVoxelType(voxelType) - 1);
     }
 
+    public void incrementVoxelTypeQuantity(VoxelType voxelType){
+        voxelTypesQuantities.put(voxelType,  getQuantityForVoxelType(voxelType) + 1);
+    }
+
     public boolean canPlaceVoxelType(VoxelType voxelType){
         return getQuantityForVoxelType(voxelType) > 0;
     }
@@ -87,5 +86,9 @@ public class PlayerHUD {
 
     public void setInfiniteMaterials(boolean infiniteMaterials) {
         this.infiniteMaterials = infiniteMaterials;
+    }
+
+    public boolean isInfiniteMaterials() {
+        return infiniteMaterials;
     }
 }

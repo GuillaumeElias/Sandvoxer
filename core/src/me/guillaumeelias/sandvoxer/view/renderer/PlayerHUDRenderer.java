@@ -5,8 +5,10 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import me.guillaumeelias.sandvoxer.Sandvoxer;
 import me.guillaumeelias.sandvoxer.model.PlayerHUD;
 import me.guillaumeelias.sandvoxer.model.World;
+import me.guillaumeelias.sandvoxer.util.Utils;
 import me.guillaumeelias.sandvoxer.view.VoxelType;
 
 public class PlayerHUDRenderer {
@@ -16,12 +18,23 @@ public class PlayerHUDRenderer {
     public static final int HUD_FONT_PADDING_BOTTOM = 30;
     public static final int HUD_FONT_PADDING_LEFT = 3;
 
+    public static final int HUD_QUANTITY_PADDING_LEFT = 14;
+    public static final int HUD_QUANTITY_PADDING_BOTTOM = 18;
+
+    public static final int HUD_QUANTITY_BACKGROUND_WIDTH = 18;
+    public static final int HUD_QUANTITY_BACKGROUND_HEIGHT = 18;
+    public static final int HUD_QUANTITY_BACKGROUND_PADDING_RIGHT = 19;
+    public static final int HUD_QUANTITY_BACKGROUND_PADDING_BOTTOM = 1;
+
+
     private PlayerHUD playerHUD;
     private World world;
     private BitmapFont font;
 
     Pixmap cursorPixmap;
     Texture cursorPixmapTexture;
+
+    Texture quantityBackgroundPixmap;
 
     public PlayerHUDRenderer(PlayerHUD playerHUD, World world, BitmapFont font){
         this.playerHUD = playerHUD;
@@ -34,6 +47,8 @@ public class PlayerHUDRenderer {
         cursorPixmap.setColor(Color.WHITE);
         cursorPixmap.fillRectangle(0, 0, 4, 4);
         cursorPixmapTexture = new Texture(cursorPixmap, Pixmap.Format.RGB888, false);
+
+        quantityBackgroundPixmap = new Texture(Utils.getPixmapRoundedRectangle(HUD_QUANTITY_BACKGROUND_WIDTH, HUD_QUANTITY_BACKGROUND_HEIGHT, 3, Sandvoxer.BACKGROUND_COLOR));
     }
 
     public void render(SpriteBatch spriteBatch, float width, float height){
@@ -50,8 +65,14 @@ public class PlayerHUDRenderer {
             spriteBatch.draw(texture, hudX, HUD_MARGINS);
             font.draw(spriteBatch, selectedVoxelType.getName(), hudX + HUD_FONT_PADDING_LEFT, HUD_MARGINS + texture.getHeight() + HUD_FONT_PADDING_BOTTOM);
 
-            //draw quantity left
-            //TODO
+            //draw quantity left (if not infinite)
+            if(playerHUD.isInfiniteMaterials() == false){
+                int quantityLeft = playerHUD.getQuantityForVoxelType(selectedVoxelType);
+
+                float quantityX = hudX + texture.getWidth();
+                spriteBatch.draw(quantityBackgroundPixmap, quantityX - HUD_QUANTITY_BACKGROUND_PADDING_RIGHT, HUD_MARGINS + HUD_QUANTITY_BACKGROUND_PADDING_BOTTOM);
+                font.draw(spriteBatch, String.valueOf(quantityLeft), quantityX - HUD_QUANTITY_PADDING_LEFT, HUD_MARGINS + HUD_QUANTITY_PADDING_BOTTOM);
+            }
         }
 
         //DRAW LEVEL NUMBER

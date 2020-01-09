@@ -138,9 +138,11 @@ public class World {
         if(hitVoxel != null)
         {
             Voxel pointedVoxel = hitVoxel.voxel;
-            /*if(pointedVoxel.type == VoxelType.RANDOM_COLOR){
-                pointedVoxel.getModelInstance().model.dispose();
-            }*/
+
+            if(player.getPlayerHUD().hasVoxelType(pointedVoxel.type)){
+                player.getPlayerHUD().incrementVoxelTypeQuantity(pointedVoxel.type);
+            }
+
             modelInstances.remove(pointedVoxel.getModelInstance());
             cubes[pointedVoxel.xi][pointedVoxel.yi][pointedVoxel.zi] = null;
         }

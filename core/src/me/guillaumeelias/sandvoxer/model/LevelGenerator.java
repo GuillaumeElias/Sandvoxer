@@ -5,6 +5,8 @@ import me.guillaumeelias.sandvoxer.model.trigger.DialogTrigger;
 import me.guillaumeelias.sandvoxer.model.trigger.EndLevelTrigger;
 import me.guillaumeelias.sandvoxer.view.VoxelType;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class LevelGenerator {
@@ -34,25 +36,27 @@ public class LevelGenerator {
                 //ADD TRIGGERS
                 cubes[100][0][101].setTrigger(new DialogTrigger(Dialog.CHICKEN_DIALOG_1, Dialog.CHICKEN_DIALOG_REPEAT, 1));
                 cubes[139][18][138].setTrigger(new DialogTrigger(Dialog.WOLF_DIALOG_1, Dialog.WOLF_DIALOG_REPEAT, 2));
-                /*TODO put back cubes[40][81][160]*/cubes[100][0][102].setTrigger(new EndLevelTrigger(3));
+                cubes[40][81][160].setTrigger(new EndLevelTrigger(3));
 
                 break;
             case 1:
 
                 playerHUD.setInfiniteMaterials(false);
+                playerHUD.setVoxelTypes(new ArrayList<>(Arrays.asList(new VoxelType[]{VoxelType.SAND})));
+                playerHUD.setSelection(0);
                 playerHUD.setVoxelTypeQuantity(VoxelType.SAND,3);
                 playerHUD.setVoxelTypeQuantity(VoxelType.BOUNCY_STUFF,2);
 
                 //INITIALIZE PLATFORMS
                 createPlatform(0, 90, 90, VoxelType.WOOD, cubes);
-                createPlatform(8, 110, 110, VoxelType.GRASS_2, cubes);
-                createPlatform(80, 30, 150, VoxelType.BLUE_STUFF, cubes);
+                createPlatform(7, 120, 120, VoxelType.GRASS_2, cubes);
+                createPlatform(80, 150, 30, VoxelType.BLUE_STUFF, cubes);
 
                 //ADD AD-HOC BLOCKS
                 //TODO
 
                 //ADD ITEMS
-                //TODO
+                createNewItem(new Vector3(130 * Voxel.CUBE_SIZE, 8 * Voxel.CUBE_SIZE,Voxel.CUBE_SIZE * 130), VoxelType.BOUNCY_STUFF, itemList);
 
                 //ADD TRIGGERS
                 //TODO
