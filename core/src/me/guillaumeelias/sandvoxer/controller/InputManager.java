@@ -55,12 +55,6 @@ public class InputManager extends InputAdapter {
     public boolean keyUp (int keycode) {
         keys.remove(keycode, 0);
 
-        if(keycode == Keys.W){
-            if(SoundController.isSoundPlaying(SoundEvent.WALK)) {
-                SoundController.stopSound(SoundEvent.WALK);
-            }
-        }
-
         return true;
     }
 
@@ -160,6 +154,7 @@ public class InputManager extends InputAdapter {
             player.moveForward(deltaTime);
         }
         if (keys.containsKey(Keys.S) ) {
+            move = true;
             player.moveBackward(deltaTime);
         }
         if (keys.containsKey(Keys.A) || keys.containsKey(Keys.Q)) {

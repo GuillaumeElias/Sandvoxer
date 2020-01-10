@@ -84,6 +84,7 @@ public class Player {
                 yVelocity = 0;
                 _afterBounce = false;
                 SoundController.stopSound(SoundEvent.JUMP);
+                SoundController.stopSound(SoundEvent.JUMP_BOUNCE);
             }
 
             yVelocity -= GRAVITY_VELOCITY * deltaTime;

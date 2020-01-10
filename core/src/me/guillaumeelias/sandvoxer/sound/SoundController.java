@@ -122,6 +122,9 @@ public class SoundController {
             case JUMP:
                 jumpSound.stop();
                 break;
+            case JUMP_BOUNCE:
+                jumpBounceSound.stop();
+                break;
             case REACHED_GROUND:
                 reachedGroundSound.stop();
                 break;
