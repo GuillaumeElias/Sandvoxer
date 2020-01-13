@@ -58,15 +58,11 @@ public class InputManager extends InputAdapter {
         return true;
     }
 
-    /*@Override
+    @Override
     public boolean touchDragged (int screenX, int screenY, int pointer) {
-        float deltaX = -Gdx.input.getDeltaX() * degreesPerPixel;
-        float deltaY = -Gdx.input.getDeltaY() * degreesPerPixel;
-        camera.direction.rotate(camera.up, deltaX);
-        tmp.set(camera.direction).crs(camera.up).nor();
-        camera.direction.rotate(tmp, deltaY);
+        mouseMoved(screenX, screenY);
         return true;
-    }*/
+    }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
