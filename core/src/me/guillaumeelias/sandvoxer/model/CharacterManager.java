@@ -1,9 +1,10 @@
-package me.guillaumeelias.sandvoxer.view;
+package me.guillaumeelias.sandvoxer.model;
 
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import me.guillaumeelias.sandvoxer.model.Character;
+import me.guillaumeelias.sandvoxer.view.CharacterType;
 
 import java.util.ArrayList;
 import java.util.List;

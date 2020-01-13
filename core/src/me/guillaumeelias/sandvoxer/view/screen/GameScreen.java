@@ -16,13 +16,14 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import me.guillaumeelias.sandvoxer.Sandvoxer;
 import me.guillaumeelias.sandvoxer.controller.InputManager;
+import me.guillaumeelias.sandvoxer.model.CharacterManager;
 import me.guillaumeelias.sandvoxer.model.Item;
 import me.guillaumeelias.sandvoxer.model.Player;
 import me.guillaumeelias.sandvoxer.model.World;
 import me.guillaumeelias.sandvoxer.sound.SoundController;
 import me.guillaumeelias.sandvoxer.sound.SoundEvent;
-import me.guillaumeelias.sandvoxer.view.CharacterManager;
 import me.guillaumeelias.sandvoxer.view.EnvironmentCubemap;
+import me.guillaumeelias.sandvoxer.view.renderer.CharacterRenderer;
 import me.guillaumeelias.sandvoxer.view.renderer.DialogRenderer;
 import me.guillaumeelias.sandvoxer.view.renderer.PlayerHUDRenderer;
 import me.guillaumeelias.sandvoxer.view.renderer.WorldRenderer;
@@ -72,6 +73,7 @@ public class GameScreen implements Screen {
         this.font = new BitmapFont(Gdx.files.internal("skin/font_pro_font_windows_20pt.fnt"), false);
         DialogRenderer.instance.initialize(font);
         WorldRenderer.instance.initialize(environment);
+        CharacterRenderer.instance.initialize(environment);
 
         //INITIALIZE CAMERA
         cam = new PerspectiveCamera(75, Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
@@ -218,7 +220,7 @@ public class GameScreen implements Screen {
 
         WorldRenderer.instance.render(modelBatch, cam);
         //modelBatch.render(debugInstances, environment); //RENDER DEBUG MODELS
-        modelBatch.render(characterManager.getModelInstances(), environment);
+        CharacterRenderer.instance.render(modelBatch, cam);
         modelBatch.end();
     }
 

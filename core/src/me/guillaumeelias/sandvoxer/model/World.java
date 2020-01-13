@@ -1,14 +1,13 @@
 package me.guillaumeelias.sandvoxer.model;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import me.guillaumeelias.sandvoxer.sound.SoundController;
 import me.guillaumeelias.sandvoxer.sound.SoundEvent;
 import me.guillaumeelias.sandvoxer.util.Utils;
-import me.guillaumeelias.sandvoxer.view.CharacterManager;
 import me.guillaumeelias.sandvoxer.view.VoxelType;
+import me.guillaumeelias.sandvoxer.view.renderer.CharacterRenderer;
 import me.guillaumeelias.sandvoxer.view.renderer.WorldRenderer;
 
 import java.util.ArrayList;
@@ -47,7 +46,10 @@ public class World {
         this.items.clear();
 
         cubes = LevelGenerator.initializeLevel(currentLevel, items, player.getPlayerHUD());
+
         WorldRenderer.instance.initializeLevel(this);
+        CharacterRenderer.instance.setCharacterManager(characterManager);
+
         characterManager.initializeCharactersForLevel(currentLevel);
     }
 
