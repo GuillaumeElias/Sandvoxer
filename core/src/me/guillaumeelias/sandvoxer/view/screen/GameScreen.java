@@ -25,6 +25,7 @@ import me.guillaumeelias.sandvoxer.view.CharacterManager;
 import me.guillaumeelias.sandvoxer.view.EnvironmentCubemap;
 import me.guillaumeelias.sandvoxer.view.renderer.DialogRenderer;
 import me.guillaumeelias.sandvoxer.view.renderer.PlayerHUDRenderer;
+import me.guillaumeelias.sandvoxer.view.renderer.WorldRenderer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,13 +63,15 @@ public class GameScreen implements Screen {
 
         levelFinished = false;
 
-        this.font = new BitmapFont(Gdx.files.internal("skin/font_pro_font_windows_20pt.fnt"), false);
-        DialogRenderer.instance.initialize(font);
-
         //INITIALIZE LIGHT
         environment = new Environment();
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, 0, -10, 0));
+
+        //INITIALIZE RENDERERS
+        this.font = new BitmapFont(Gdx.files.internal("skin/font_pro_font_windows_20pt.fnt"), false);
+        DialogRenderer.instance.initialize(font);
+        WorldRenderer.instance.initialize(environment);
 
         //INITIALIZE CAMERA
         cam = new PerspectiveCamera(75, Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
@@ -210,8 +213,10 @@ public class GameScreen implements Screen {
     }
 
     private void renderModels(){
+
         modelBatch.begin(cam);
-        modelBatch.render(world.getModelInstances(), environment);
+
+        WorldRenderer.instance.render(modelBatch, cam);
         //modelBatch.render(debugInstances, environment); //RENDER DEBUG MODELS
         modelBatch.render(characterManager.getModelInstances(), environment);
         modelBatch.end();

@@ -9,6 +9,7 @@ import me.guillaumeelias.sandvoxer.sound.SoundEvent;
 import me.guillaumeelias.sandvoxer.util.Utils;
 import me.guillaumeelias.sandvoxer.view.CharacterManager;
 import me.guillaumeelias.sandvoxer.view.VoxelType;
+import me.guillaumeelias.sandvoxer.view.renderer.WorldRenderer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,13 +27,11 @@ public class World {
     private List<Item> items;
     private int currentLevel;
 
-    private List<ModelInstance> modelInstances;
     private CharacterManager characterManager;
 
     public World(Player player){
         this.player = player;
         this.currentLevel = 0;
-        this.modelInstances = new ArrayList<>(WORLD_SIDE_LENGTH*WORLD_SIDE_LENGTH);
         this.items = new ArrayList<>();
         this.characterManager = new CharacterManager();
 
@@ -45,33 +44,13 @@ public class World {
     }
 
     private void startLevel(){
-        this.modelInstances.clear();
         this.items.clear();
 
         cubes = LevelGenerator.initializeLevel(currentLevel, items, player.getPlayerHUD());
-        populateModelInstancesFromLevel();
+        WorldRenderer.instance.initializeLevel(this);
         characterManager.initializeCharactersForLevel(currentLevel);
     }
 
-    public void populateModelInstancesFromLevel(){ //TODO move elsewhere
-
-        //parse all cubes
-        for (int xi = 0; xi < GRID_SIZE; xi += 1) {
-            for (int yi = 0; yi < GRID_SIZE; yi += 1) {
-                for (int zi = 0; zi < GRID_SIZE; zi += 1) {
-                    Voxel cube = cubes[xi][yi][zi];
-                    if(cube != null){
-                        modelInstances.add(cube.modelInstance);
-                    }
-                }
-            }
-        }
-
-        //parse item
-        for(Item item : items){
-            this.modelInstances.add(item.getModelInstance());
-        }
-    }
 
     public void onClickBlock(Vector3 rayFrom, Vector3 rayTo){
         HitVoxel hitVoxel = findCubeAtRay(rayFrom, rayTo);
@@ -149,7 +128,7 @@ public class World {
                 player.getPlayerHUD().incrementVoxelTypeQuantity(pointedVoxel.type);
             }
 
-            modelInstances.remove(pointedVoxel.getModelInstance());
+            WorldRenderer.instance.removeVoxel(pointedVoxel);
             cubes[pointedVoxel.xi][pointedVoxel.yi][pointedVoxel.zi] = null;
 
             SoundController.soundEvent(SoundEvent.REMOVE_BLOCK);
@@ -176,7 +155,7 @@ public class World {
 
     private void placeBlock(int xi, int yi, int zi, VoxelType voxelType, boolean playSound){
         cubes[xi][yi][zi] = new Voxel(xi, yi, zi, voxelType);
-        modelInstances.add(cubes[xi][yi][zi].modelInstance);
+        WorldRenderer.instance.addVoxel(cubes[xi][yi][zi]);
 
         player.getPlayerHUD().decrementVoxelTypeQuantity(voxelType);
 
@@ -330,10 +309,6 @@ public class World {
         return cubes[xi][yi][zi];
     }
 
-    public List<ModelInstance> getModelInstances() {
-        return modelInstances;
-    }
-
     public List<Item> getItems() {
         return items;
     }
@@ -351,7 +326,7 @@ public class World {
     }
 
     public void removeItem(Item item) {
-        modelInstances.remove(item.getModelInstance());
+        //voxels.remove(item.getModelInstance());
         items.remove(item);
     }
 
@@ -375,5 +350,9 @@ public class World {
             this.voxel = voxel;
             this.incisionPoint = tmp;
         }
+    }
+
+    public Voxel[][][] getCubes() {
+        return cubes;
     }
 }

@@ -18,6 +18,7 @@ public class Voxel {
     VoxelType type;
 
     BoundingBox boundingBox;
+    Vector3 center;
 
     me.guillaumeelias.sandvoxer.model.trigger.Trigger trigger;
 
@@ -33,6 +34,8 @@ public class Voxel {
 
         modelInstance = new ModelInstance(voxelType.getModel());
         modelInstance.transform.translate(xi * Voxel.CUBE_SIZE,yi * Voxel.CUBE_SIZE,zi * Voxel.CUBE_SIZE);
+
+        center = new Vector3(boundingBox.getCenterX(), boundingBox.getCenterY(), boundingBox.getCenterZ());
     }
 
     public ModelInstance getModelInstance() {
@@ -53,5 +56,9 @@ public class Voxel {
 
     public VoxelType getType() {
         return type;
+    }
+
+    public Vector3 getCenter() {
+        return center;
     }
 }

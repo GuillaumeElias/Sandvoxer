@@ -16,6 +16,7 @@ public class Item {
     private Vector3 position;
 
     private BoundingBox boundingBox;
+    private Vector3 center;
 
     private ModelInstance modelInstance;
 
@@ -28,6 +29,7 @@ public class Item {
         this.yieldedVoxelType = yieldedVoxelType;
 
         this.boundingBox = new BoundingBox(this.position, this.position.cpy().add(ITEM_SIDE_LENGTH,ITEM_SIDE_LENGTH,ITEM_SIDE_LENGTH));
+        this.center = new Vector3(boundingBox.getCenterX(), boundingBox.getCenterY(), boundingBox.getCenterZ());
 
         //TODO put that in ItemView
         this.modelInstance = new ModelInstance(VoxelModelFactory.buildModelForItem(yieldedVoxelType));
@@ -51,5 +53,9 @@ public class Item {
 
     public VoxelType getYieldedVoxelType() {
         return yieldedVoxelType;
+    }
+
+    public Vector3 getCenter() {
+        return center;
     }
 }
