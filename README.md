@@ -11,7 +11,6 @@ This project is using the libGDX framework (version 1.9.10) which itself depends
 ## How to build
 
 - Install IntelliJ IDEA (community edition is sufficient) or Android Studio.
-- Download libGDX at https://libgdx.badlogicgames.com/download.html.
 - Open build.gradle as a project.
 
 ## License
