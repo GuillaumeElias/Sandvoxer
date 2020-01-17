@@ -1,3 +1,8 @@
+/**********************************************************************************************************************************
+ * This file is part of the Sandvoxer project developed by Guillaume Elias and covered by the Apache 2 license (see LICENSE file).*
+ * You may reuse it in accordance with the Apache 2 license and at your own peril.                                                *                                                             *
+ **********************************************************************************************************************************/
+
 package me.guillaumeelias.sandvoxer.view.renderer;
 
 import com.badlogic.gdx.graphics.Camera;
@@ -36,7 +41,7 @@ public class WorldRenderer {
 
         Voxel cubes[][][] = world.getCubes();
 
-        //parse all cubes
+        //parse all cubes                               //TODO merge all of them together to create a single mesh
         for (int xi = 0; xi < World.GRID_SIZE; xi += 1) {
             for (int yi = 0; yi < World.GRID_SIZE; yi += 1) {
                 for (int zi = 0; zi < World.GRID_SIZE; zi += 1) {

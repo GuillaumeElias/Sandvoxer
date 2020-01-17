@@ -1,3 +1,8 @@
+/**********************************************************************************************************************************
+ * This file is part of the Sandvoxer project developed by Guillaume Elias and covered by the Apache 2 license (see LICENSE file).*
+ * You may reuse it in accordance with the Apache 2 license and at your own peril.                                                *                                                             *
+ **********************************************************************************************************************************/
+
 package me.guillaumeelias.sandvoxer.view;
 
 import com.badlogic.gdx.Gdx;

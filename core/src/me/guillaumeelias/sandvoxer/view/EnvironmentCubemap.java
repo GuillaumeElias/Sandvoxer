@@ -1,3 +1,8 @@
+/*******************************************************************************************************************************
+ * Thanks to Nolesh (https://stackoverflow.com/questions/21884805/libgdx-0-9-9-apply-cubemap-in-environment)                   *
+ * Given that most of the code on this file comes from stackoverflow, this file is under the most permissive license possible. *
+ *******************************************************************************************************************************/
+
 package me.guillaumeelias.sandvoxer.view;
 
 import com.badlogic.gdx.Gdx;
@@ -11,9 +16,6 @@ import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
-/**
- * Thanks to Nolesh
- */
 public class EnvironmentCubemap implements Disposable {
 
     protected final Pixmap[] data = new Pixmap[6];
