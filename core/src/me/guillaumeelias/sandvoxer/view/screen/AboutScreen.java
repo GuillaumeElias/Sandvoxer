@@ -61,9 +61,11 @@ public class AboutScreen extends InputListener implements Screen {
         stage.addActor(logoImage);
 
         final Label label = new Label("Game made by Timmy O'Toole (www.timmyotoolebits.tumblr.com)\n" +
-                "Chicken model made by Čestmír Dammer\n" +
-                "Bear and Joey The Sheep models made by Martin S Stroller\n" +
-                "This project uses libGDX\n", skin);
+		        "Source is available at github.com/GuillaumeElias\n" +
+                "Chicken model made by Blujay downloaded on Sketchfab (CC BY 4.0)\n" +
+                "Bear, Tiki(dog) and Joey The Sheep models made by Martin S Stoller downloaded on Sketchfab (CC BY 4.0)\n" +
+				"Wolf model made by procrafter and downloaded at free3d.com \n" +
+                "This project uses libGDX (Apache 2 license)\n", skin);
 
 
         label.setWidth(400f);
