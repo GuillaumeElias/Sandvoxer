@@ -91,7 +91,7 @@ public class MenuScreen extends InputListener implements Screen {
         exitButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-                System.exit(0);
+                Gdx.app.exit();
             }
         });
         exitButton.addListener(hoverListener);

@@ -57,5 +57,6 @@ public class Sandvoxer extends Game {
 	@Override
 	public void dispose() {
 		VoxelModelFactory.disposeAll();
+		SoundController.disposeAll();
 	}
 }

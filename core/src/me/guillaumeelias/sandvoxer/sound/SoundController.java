@@ -151,4 +151,23 @@ public class SoundController {
     public static void stopMusic() {
         currentMusic.stop();
     }
+
+    public static void disposeAll(){
+
+        currentMusic.stop();
+        currentMusic.dispose();
+
+        letterSound.dispose();
+        placeBlockSound.dispose();
+        removeBlockSound.dispose();
+        jumpSound.dispose();
+        jumpBounceSound.dispose();
+        bounceSound.dispose();
+        reachedGroundSound.dispose();
+        newItemSound.dispose();
+        selectVoxelTypeOneSound.dispose();
+        selectVoxelTypeTwoSound.dispose();
+        walkSound.dispose();
+        levelFinishedSound.dispose();
+    }
 }
