@@ -32,6 +32,10 @@ public enum Dialog {
             "Scroll down or press the number 2 to select another material",
             "Then try to reach the blue platform up there"
     },200),
+    WOLF_DIALOG_NO_BOUNCY(new String[]{
+            "You missed an item behind you",
+            "Look around this platform"
+    },200),
     WOLF_DIALOG_REPEAT(new String[]{
         "Yeah",
         "Bounce away baby",

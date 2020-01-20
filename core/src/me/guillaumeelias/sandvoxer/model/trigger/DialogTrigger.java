@@ -14,7 +14,7 @@ public class DialogTrigger extends Trigger {
     private Dialog dialog;
     private Dialog dialogIfAlreadyTriggered;
 
-    public DialogTrigger(Dialog dialog, Dialog dialogIfAlreadyTriggered, int triggerId){
+    public DialogTrigger(Dialog dialog, Dialog dialogIfAlreadyTriggered, int triggerId) {
         super(triggerId);
 
         this.dialog = dialog;
@@ -23,17 +23,20 @@ public class DialogTrigger extends Trigger {
 
     @Override
     protected void doStartTrigger() {
-        if(dialog.wasPlayed()) {
+        if (dialog.wasPlayed()) {
             DialogRenderer.instance.setCurrentDialog(dialogIfAlreadyTriggered);
-        }else{
-            switch (id) {
-                case 1:
-                    if(Player.getInstance().getPlayerHUD().getVoxelTypes().isEmpty()){
-                        DialogRenderer.instance.setCurrentDialog(Dialog.CHICKEN_DIALOG_NO_SAND);
-                        break;
-                    }
-                default:
-                    DialogRenderer.instance.setCurrentDialog(dialog);
+        } else {
+
+            //if Character 1 and has not picked up sand yet
+            if (id == 1 && Player.getInstance().getPlayerHUD().getVoxelTypes().isEmpty()) {
+                DialogRenderer.instance.setCurrentDialog(Dialog.CHICKEN_DIALOG_NO_SAND);
+
+            //if Character 2 and has not picked up bouncy stuff yet
+            } else if (id == 2 && Player.getInstance().getPlayerHUD().getVoxelTypes().size() < 2) {
+                DialogRenderer.instance.setCurrentDialog(Dialog.WOLF_DIALOG_NO_BOUNCY);
+
+            } else {
+                DialogRenderer.instance.setCurrentDialog(dialog);
             }
         }
     }
